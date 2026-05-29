@@ -1461,6 +1461,7 @@
         speakNextChunk();
       };
       utterance.onerror = () => {
+        if (speechStopped) return;
         $("#readTopicBtn")?.classList.remove("is-reading");
         setReaderStatus("El navegador bloqueó la lectura. Toca nuevamente Leer esta ficha.", "stopped");
       };
@@ -1495,6 +1496,10 @@
     function stopReading() {
       speechStopped = true;
       speechChunks = [];
+      if (currentUtterance) {
+        currentUtterance.onerror = null;
+        currentUtterance.onend = null;
+      }
       currentUtterance = null;
       if ("speechSynthesis" in window) window.speechSynthesis.cancel();
       $("#readTopicBtn")?.classList.remove("is-reading");
