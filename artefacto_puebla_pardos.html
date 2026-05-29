@@ -73,9 +73,9 @@
 
     .hero {
       display: grid;
-      grid-template-columns: 1.05fr .95fr;
-      gap: 34px;
-      align-items: end;
+      grid-template-columns: 1fr;
+      gap: 28px;
+      align-items: start;
     }
 
     .eyebrow {
@@ -97,7 +97,7 @@
       margin: 22px 0 16px;
       max-width: 780px;
       font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(48px, 7vw, 104px);
+      font-size: clamp(24px, 3.5vw, 52px);
       line-height: .93;
       letter-spacing: 0;
     }
@@ -180,7 +180,9 @@
 
     .hero-side {
       display: grid;
-      gap: 16px;
+      grid-template-columns: minmax(0, 1.12fr) minmax(340px, .88fr);
+      gap: 18px;
+      align-items: stretch;
     }
 
     .hero-visual {
@@ -190,6 +192,7 @@
       overflow: hidden;
       box-shadow: var(--shadow);
       background: var(--paper);
+      display: flex;
     }
 
     [data-theme="dark"] .hero-visual {
@@ -200,7 +203,8 @@
     .hero-visual img {
       display: block;
       width: 100%;
-      aspect-ratio: 16 / 10;
+      min-height: 320px;
+      height: 100%;
       object-fit: cover;
     }
 
@@ -408,6 +412,17 @@
     .section-head p {
       margin: 0;
       color: var(--muted);
+    }
+
+    .section-title-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .section-title-row h2 {
+      flex: 0 1 auto;
     }
 
     .info-grid {
@@ -621,20 +636,55 @@
     .timeline {
       padding: 28px;
       display: grid;
-      gap: 18px;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 14px;
     }
 
     .event {
+      appearance: none;
+      width: 100%;
+      min-height: 154px;
       display: grid;
-      grid-template-columns: 96px 1fr;
-      gap: 18px;
-      padding-bottom: 18px;
-      border-bottom: 1px solid var(--line);
+      grid-template-rows: auto 1fr;
+      gap: 12px;
+      border: 1px solid rgba(222, 214, 201, .9);
+      border-radius: 18px;
+      padding: 17px;
+      text-align: left;
+      color: var(--ink);
+      cursor: pointer;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, .94), rgba(240, 235, 226, .72)),
+        var(--paper);
+      box-shadow:
+        0 16px 28px rgba(46, 33, 20, .12),
+        0 4px 0 rgba(46, 33, 20, .08),
+        inset 0 1px 0 rgba(255, 255, 255, .9),
+        inset 0 -1px 0 rgba(46, 33, 20, .07);
+      transform: translateY(0);
+      transition: transform .24s cubic-bezier(.16, 1, .3, 1), border-color .24s ease, box-shadow .24s ease, background .24s ease;
     }
 
-    .event:last-child {
-      border-bottom: 0;
-      padding-bottom: 0;
+    .event:hover,
+    .event.active {
+      border-color: rgba(184, 138, 56, .56);
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, .98), rgba(255, 253, 248, .82)),
+        var(--paper);
+      box-shadow:
+        0 20px 34px rgba(46, 33, 20, .16),
+        0 5px 0 rgba(141, 47, 36, .16),
+        inset 0 1px 0 rgba(255, 255, 255, .95),
+        inset 0 -1px 0 rgba(46, 33, 20, .07);
+      transform: translateY(-3px);
+    }
+
+    .event:active {
+      transform: translateY(1px);
+      box-shadow:
+        0 10px 18px rgba(46, 33, 20, .12),
+        0 2px 0 rgba(141, 47, 36, .16),
+        inset 0 1px 0 rgba(255, 255, 255, .9);
     }
 
     .year {
@@ -645,11 +695,27 @@
 
     .event h3 {
       margin: 0 0 6px;
+      font-size: 18px;
+      line-height: 1.12;
     }
 
     .event p {
       margin: 0;
       color: var(--muted);
+      font-size: 14px;
+    }
+
+    .timeline-reader {
+      margin-top: 18px;
+      animation: rise .28s ease both;
+    }
+
+    .timeline-reader h3 {
+      font-size: clamp(25px, 3vw, 40px);
+    }
+
+    .timeline-reader[hidden] {
+      display: none;
     }
 
     .quiz-grid {
@@ -777,7 +843,7 @@
     }
 
     @media (max-width: 860px) {
-      .hero, .section-head, .reader-layout, .quiz-grid, .sources {
+      .hero, .hero-side, .section-head, .reader-layout, .quiz-grid, .sources {
         grid-template-columns: 1fr;
       }
 
@@ -804,9 +870,8 @@
         gap: 4px;
       }
 
-      .event {
-        grid-template-columns: 1fr;
-        gap: 4px;
+      .section-head {
+        align-items: start;
       }
     }
 
@@ -822,6 +887,12 @@
 
       h1 {
         font-size: clamp(38px, 14vw, 58px);
+      }
+
+      .hero-visual img {
+        min-height: 240px;
+        aspect-ratio: 16 / 10;
+        height: auto;
       }
 
       .lead {
@@ -846,7 +917,8 @@
       .icon-btn,
       .tab,
       .option,
-      .topic-btn {
+      .topic-btn,
+      .event {
         min-height: 48px;
       }
 
@@ -898,18 +970,12 @@
   <header>
     <div class="shell hero">
       <div>
-        <span class="eyebrow">Artefacto interactivo | Historia de Costa Rica</span>
         <h1>La Puebla de los Pardos en el siglo XVII</h1>
-        <p class="lead">Explora el documento, identifica sus ideas centrales y responde preguntas con retroalimentación inmediata y puntos por aciertos.</p>
       </div>
 
       <div class="hero-side">
         <figure class="hero-visual">
           <img src="La%20Puebla.png" alt="Ilustración histórica titulada La Puebla de los Pardos">
-          <figcaption>
-            <span>Portada visual del artefacto</span>
-            <span>La Puebla de los Pardos</span>
-          </figcaption>
         </figure>
 
         <aside class="document-card" aria-label="Ficha del documento">
@@ -935,7 +1001,6 @@
       <div class="tabs" role="tablist" aria-label="Secciones del artefacto">
         <button class="tab active" data-tab="panorama">Panorama</button>
         <button class="tab" data-tab="linea">Línea de tiempo</button>
-        <button class="tab" data-tab="reto">Reto</button>
         <button class="tab" data-tab="creditos">Créditos</button>
       </div>
       <div class="nav-tools">
@@ -948,7 +1013,10 @@
   <main class="shell">
     <section id="panorama" class="active">
       <div class="section-head">
-        <h2>Ideas para entrar al texto</h2>
+        <div class="section-title-row">
+          <h2>Ideas para entrar al texto</h2>
+          <button class="btn" type="button" data-start-panorama-challenge>Reto</button>
+        </div>
         <p>El artículo explica cómo las poblaciones negras, mulatas y pardas participaron en la vida urbana, religiosa, laboral, militar y económica de Cartago, capital colonial de Costa Rica.</p>
       </div>
 
@@ -965,12 +1033,15 @@
         <p>Una ruta breve por los momentos mencionados o derivados directamente del documento.</p>
       </div>
       <div class="timeline" id="timeline"></div>
+      <div class="timeline-reader" id="timelineReader" hidden>
+        <article class="reader-panel reader-content" id="timelineContent"></article>
+      </div>
     </section>
 
     <section id="reto">
       <div class="section-head">
-        <h2>Reto de comprensión</h2>
-        <p>Responde cinco preguntas seleccionadas al azar del banco del documento. Cada acierto suma 10 puntos; el sistema muestra avance y resultado final.</p>
+        <h2 id="quizTitle">Reto de comprensión</h2>
+        <p id="quizIntro">Responde cinco preguntas seleccionadas al azar del banco del documento. Cada acierto suma 10 puntos; el sistema muestra avance y resultado final.</p>
       </div>
 
       <div class="quiz-grid">
@@ -1168,15 +1239,162 @@
     ];
 
     const timelineItems = [
-      ["1611", "Decadencia regional", "El texto relaciona posibles desplazamientos con la decadencia de la región de astilleros después de 1611."],
-      ["1625", "Visita episcopal", "En la visita del obispo Valtonado se confirmaron 685 personas; 65 fueron negros y mulatos, libres y esclavos."],
-      ["1629", "Dispersión de la población", "Muchos negros, mulatos y pardos deambulaban por montes y valles; Baltazar de Grado intentaba darles doctrina cristiana."],
-      ["1635 / 1638", "Hallazgo de la imagen", "La tradición sitúa la aparición de la Virgen de los Ángeles en los ejidos de la capital, en La Gotera."],
-      ["1639", "Templo inicial", "Se comenzó a construir un templo con limosnas vinculadas a labores de milpa y chácaras."],
-      ["1650", "Asentamiento impulsado", "Juan Fernández de Salinas y de la Cerda dispuso asentar a población negra, mulata y parda dispersa en La Gotera."],
-      ["1653", "Cofradía", "Se fundó la cofradía de la Virgen de los Ángeles, institución que adquirió relevancia económica y religiosa."],
-      ["1676", "Demandas ante el cabildo", "Vecinos de la Puebla plantearon demandas de continuidad, representación y exoneración del pago de terrazgo."],
-      ["1782", "Patronazgo", "La Virgen de los Ángeles fue declarada patrona de Costa Rica."]
+      {
+        id: "t1611",
+        year: "1611",
+        title: "Decadencia regional",
+        text: "El texto relaciona posibles desplazamientos con la decadencia de la región de astilleros después de 1611.",
+        detail: [
+          "La referencia a la decadencia de la región de astilleros ayuda a explicar por qué algunos grupos pudieron desplazarse hacia otros espacios de Cartago.",
+          "En la lectura del documento, estos movimientos no aparecen como hechos aislados: se conectan con cambios económicos regionales y con la necesidad colonial de ordenar a la población dispersa."
+        ],
+        facts: [["Proceso", "Desplazamientos"], ["Causa asociada", "Decadencia regional"], ["Relación", "Astilleros y Cartago"]]
+      },
+      {
+        id: "t1625",
+        year: "1625",
+        title: "Visita episcopal",
+        text: "En la visita del obispo Valtonado se confirmaron 685 personas; 65 fueron negros y mulatos, libres y esclavos.",
+        detail: [
+          "El dato permite observar la presencia documentada de negros y mulatos en Cartago durante el siglo XVII.",
+          "La visita episcopal funciona como evidencia demográfica y religiosa: registra personas confirmadas y distingue condiciones de libertad y esclavitud."
+        ],
+        facts: [["Confirmados", "685"], ["Negros y mulatos", "65"], ["Condición", "Libres y esclavos"]]
+      },
+      {
+        id: "t1629",
+        year: "1629",
+        title: "Dispersión de la población",
+        text: "Muchos negros, mulatos y pardos deambulaban por montes y valles; Baltazar de Grado intentaba darles doctrina cristiana.",
+        detail: [
+          "La dispersión por montes y valles dificultaba la doctrina cristiana regular y preocupaba a las autoridades religiosas.",
+          "Este punto anticipa la lógica de concentración posterior: reunir a la población permitía control, evangelización y organización territorial."
+        ],
+        facts: [["Problema", "Dispersión"], ["Figura", "Baltazar de Grado"], ["Objetivo", "Doctrina cristiana"]]
+      },
+      {
+        id: "t1635",
+        year: "1635 / 1638",
+        title: "Hallazgo de la imagen",
+        text: "La tradición sitúa la aparición de la Virgen de los Ángeles en los ejidos de la capital, en La Gotera.",
+        detail: [
+          "El documento vincula la tradición del hallazgo con una mujer parda, identificada en la tradición histórica como Juana Pereira.",
+          "El lugar del hallazgo, La Gotera, conecta devoción religiosa y presencia parda en los ejidos de Cartago."
+        ],
+        facts: [["Lugar", "La Gotera"], ["Tradición", "Juana Pereira"], ["Tema", "Virgen de los Ángeles"]]
+      },
+      {
+        id: "t1639",
+        year: "1639",
+        title: "Templo inicial",
+        text: "Se comenzó a construir un templo con limosnas vinculadas a labores de milpa y chácaras.",
+        detail: [
+          "La construcción del templo muestra una devoción todavía modesta, sostenida con limosnas y trabajo cotidiano.",
+          "El texto relaciona economía local, cultivo y práctica religiosa, lo que ayuda a entender la formación comunitaria alrededor del santuario."
+        ],
+        facts: [["Obra", "Templo"], ["Sustento", "Limosnas"], ["Trabajo", "Milpas y chácaras"]]
+      },
+      {
+        id: "t1650",
+        year: "1650",
+        title: "Asentamiento impulsado",
+        text: "Juan Fernández de Salinas y de la Cerda dispuso asentar a población negra, mulata y parda dispersa en La Gotera.",
+        detail: [
+          "La medida buscaba concentrar población que estaba dispersa y hacer más efectiva la doctrina, el control y la organización colonial.",
+          "El asentamiento se enlaza con la asignación de solares y con la organización de milicias de negros, mulatos y pardos."
+        ],
+        facts: [["Gobernador", "Fernández de Salinas"], ["Espacio", "La Gotera"], ["Base", "Solares y milicias"]]
+      },
+      {
+        id: "t1653",
+        year: "1653",
+        title: "Cofradía",
+        text: "Se fundó la cofradía de la Virgen de los Ángeles, institución que adquirió relevancia económica y religiosa.",
+        detail: [
+          "La cofradía fue un espacio de organización religiosa, administración de bienes, fiestas y participación comunitaria.",
+          "Según el artículo, la pobreza de la ermita y la cofradía hizo que los mayordomos españoles perdieran interés y que los hermanos pardos asumieran mayor responsabilidad práctica."
+        ],
+        facts: [["Institución", "Cofradía"], ["Año", "1653"], ["Responsabilidad", "Hermanos pardos"]]
+      },
+      {
+        id: "t1676",
+        year: "1676",
+        title: "Demandas ante el cabildo",
+        text: "Vecinos de la Puebla plantearon demandas de continuidad, representación y exoneración del pago de terrazgo.",
+        detail: [
+          "El 1 de enero de 1676, vecinos mulatos, negros libres y mestizos bajos solicitaron continuar la fundación y obtener representación propia.",
+          "La petición evidencia agencia colectiva: los vecinos buscaron reconocimiento, autoridades internas y mejores condiciones fiscales dentro del marco colonial."
+        ],
+        facts: [["Instancia", "Cabildo"], ["Demandas", "Representación"], ["Fecha", "1 de enero"]]
+      },
+      {
+        id: "t1782",
+        year: "1782",
+        title: "Patronazgo",
+        text: "La Virgen de los Ángeles fue declarada patrona de Costa Rica.",
+        detail: [
+          "El patronazgo muestra la ampliación del culto más allá de su origen local en La Gotera.",
+          "La secuencia permite ver cómo una devoción ligada a la Puebla terminó ocupando un lugar central en la memoria religiosa costarricense."
+        ],
+        facts: [["Declaración", "Patrona"], ["Alcance", "Costa Rica"], ["Culto", "Virgen de los Ángeles"]]
+      }
+    ];
+
+    const timelineQuestionBank = [
+      {
+        q: "¿Qué proceso ayuda a explicar la referencia posterior a 1611?",
+        options: ["Posibles desplazamientos por la decadencia regional de astilleros", "La fundación de la cofradía", "La visita episcopal de Valtonado", "La declaración del patronazgo"],
+        answer: 0,
+        why: "La secuencia relaciona la decadencia de la región de astilleros después de 1611 con posibles desplazamientos hacia Cartago."
+      },
+      {
+        q: "¿Qué dato registra la visita episcopal de 1625?",
+        options: ["685 confirmados, entre ellos 65 negros y mulatos", "La fundación de la Puebla como ciudad independiente", "La exoneración del terrazgo", "La construcción definitiva de la basílica"],
+        answer: 0,
+        why: "El documento menciona 685 personas confirmadas; 65 eran negros y mulatos, libres y esclavos."
+      },
+      {
+        q: "¿Por qué la dispersión de 1629 era importante para las autoridades religiosas?",
+        options: ["Dificultaba dar doctrina cristiana de forma regular", "Impedía el comercio con España", "Cancelaba las fiestas religiosas", "Eliminaba la presencia de Cartago"],
+        answer: 0,
+        why: "La población dispersa por montes y valles hacía difícil la doctrina, por eso se pensó en concentrarla."
+      },
+      {
+        q: "¿Con qué espacio se vincula el hallazgo tradicional de la Virgen de los Ángeles?",
+        options: ["La Gotera, en los ejidos de Cartago", "La plaza mayor de León", "El puerto de Matina", "La región de Nicoya"],
+        answer: 0,
+        why: "La tradición sitúa el hallazgo en La Gotera, en los ejidos de la capital colonial."
+      },
+      {
+        q: "¿Qué muestra el templo inicial de 1639?",
+        options: ["Una devoción sostenida con limosnas, milpas y chácaras", "Una obra financiada por la industria cafetalera", "Una construcción militar europea", "Un traslado obligatorio a Guatemala"],
+        answer: 0,
+        why: "El texto asocia el templo inicial con limosnas vinculadas a labores de milpa y chácaras."
+      },
+      {
+        q: "¿Quién impulsó el asentamiento de 1650 en La Gotera?",
+        options: ["Juan Fernández de Salinas y de la Cerda", "Monseñor Sanabria", "Baltazar de Grado", "Rina Cáceres Gómez"],
+        answer: 0,
+        why: "El gobernador Juan Fernández de Salinas y de la Cerda dispuso asentar a población negra, mulata y parda dispersa."
+      },
+      {
+        q: "¿Qué institución se fundó en 1653?",
+        options: ["La cofradía de la Virgen de los Ángeles", "El cabildo de Guatemala", "La universidad colonial", "La primera imprenta de Cartago"],
+        answer: 0,
+        why: "En 1653 se fundó la cofradía de la Virgen de los Ángeles, importante en la organización religiosa y comunitaria."
+      },
+      {
+        q: "¿Qué revela la demanda de 1676 ante el cabildo?",
+        options: ["Agencia colectiva y búsqueda de representación", "El abandono completo de La Gotera", "La desaparición de la cofradía", "La ausencia de población parda"],
+        answer: 0,
+        why: "Los vecinos solicitaron continuidad de la fundación, representación propia y exoneración del terrazgo."
+      },
+      {
+        q: "¿Qué ocurrió en 1782 según la secuencia?",
+        options: ["La Virgen de los Ángeles fue declarada patrona de Costa Rica", "Se fundó la cofradía", "Se realizó la visita de Valtonado", "Se asignaron los primeros solares"],
+        answer: 0,
+        why: "La secuencia cierra con la declaración de la Virgen de los Ángeles como patrona de Costa Rica en 1782."
+      }
     ];
 
     const questionBank = [
@@ -1363,13 +1581,16 @@
     ];
 
     let questions = [];
+    let activeQuestionBank = questionBank;
+    let activeQuizTitle = "Reto de comprensión";
+    let activeQuizIntro = "Responde cinco preguntas seleccionadas al azar del banco del documento. Cada acierto suma 10 puntos; el sistema muestra avance y resultado final.";
 
     function shuffleItems(items) {
       return [...items].sort(() => Math.random() - 0.5);
     }
 
-    function buildQuestionSet() {
-      questions = shuffleItems(questionBank).slice(0, 5).map(item => {
+    function buildQuestionSet(bank = activeQuestionBank) {
+      questions = shuffleItems(bank).slice(0, 5).map(item => {
         const options = item.options.map((text, index) => ({ text, correct: index === item.answer }));
         const shuffledOptions = shuffleItems(options);
         return {
@@ -1381,6 +1602,7 @@
     }
 
     let activeTopic = topics[0].id;
+    let activeTimelineItem = timelineItems[0].id;
     let qIndex = 0;
     let score = 0;
     let answered = false;
@@ -1426,15 +1648,41 @@
     }
 
     function renderTimeline() {
-      $("#timeline").innerHTML = timelineItems.map(([year, title, text]) => `
-        <article class="event">
-          <div class="year">${year}</div>
+      $("#timeline").innerHTML = timelineItems.map(item => `
+        <button class="event ${item.id === activeTimelineItem && !$("#timelineReader").hidden ? "active" : ""}" type="button" data-open-timeline="${item.id}">
+          <div class="year">${item.year}</div>
           <div>
-            <h3>${title}</h3>
-            <p>${text}</p>
+            <h3>${item.title}</h3>
+            <p>${item.text}</p>
           </div>
-        </article>
+        </button>
       `).join("");
+    }
+
+    function renderTimelineTopic() {
+      const item = timelineItems.find(entry => entry.id === activeTimelineItem) || timelineItems[0];
+      $("#timelineContent").innerHTML = `
+        <span class="kicker">${item.year}</span>
+        <h3>${item.title}</h3>
+        <p>${item.text}</p>
+        <div class="detail-list">
+          ${(item.detail || []).map(detail => `<p>${detail}</p>`).join("")}
+        </div>
+        <div class="fact-row">
+          ${item.facts.map(([label, value]) => `<div class="fact"><strong>${value}</strong><span>${label}</span></div>`).join("")}
+        </div>
+      `;
+    }
+
+    function openTimelineReader(itemId) {
+      activeTimelineItem = itemId;
+      renderTimelineTopic();
+      $("#timelineReader").hidden = false;
+      renderTimeline();
+      setTab("linea");
+      requestAnimationFrame(() => {
+        $("#timelineReader").scrollIntoView({ behavior: "smooth", block: "start" });
+      });
     }
 
     function setTab(id) {
@@ -1476,6 +1724,8 @@
       const item = questions[qIndex];
       quizFinished = false;
       answered = false;
+      $("#quizTitle").textContent = activeQuizTitle;
+      $("#quizIntro").textContent = activeQuizIntro;
       $("#questionCount").textContent = `Pregunta ${qIndex + 1} de ${questions.length}`;
       $("#questionText").textContent = item.q;
       $("#feedback").textContent = "Selecciona una respuesta para ver la retroalimentación.";
@@ -1487,12 +1737,20 @@
     }
 
     function resetQuiz() {
-      buildQuestionSet();
+      buildQuestionSet(activeQuestionBank);
       qIndex = 0;
       score = 0;
       answered = false;
       quizFinished = false;
       renderQuestion();
+    }
+
+    function startQuizFromBank(bank, title, intro) {
+      activeQuestionBank = bank;
+      activeQuizTitle = title;
+      activeQuizIntro = intro;
+      resetQuiz();
+      setTab("reto");
     }
 
     function finishQuiz() {
@@ -1624,6 +1882,19 @@
         openPanoramaReader(openTopic.dataset.openTopic);
       }
 
+      const openTimeline = event.target.closest("[data-open-timeline]");
+      if (openTimeline) {
+        openTimelineReader(openTimeline.dataset.openTimeline);
+      }
+
+      if (event.target.closest("[data-start-panorama-challenge]")) {
+        startQuizFromBank(
+          questionBank,
+          "Reto de comprensión",
+          "Responde cinco preguntas seleccionadas al azar del banco del documento. Cada acierto suma 10 puntos; el sistema muestra avance y resultado final."
+        );
+      }
+
       if (event.target.closest("#readTopicBtn")) speakCurrentTopic();
 
       if (event.target.closest("#stopReadBtn")) stopReading();
@@ -1679,6 +1950,7 @@
     renderCards();
     renderTopic();
     renderTimeline();
+    renderTimelineTopic();
     resetQuiz();
   </script>
 </body>
