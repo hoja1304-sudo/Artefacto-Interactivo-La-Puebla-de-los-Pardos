@@ -1419,13 +1419,14 @@
 
     function getSpanishVoice() {
       const voices = window.speechSynthesis.getVoices();
-      return voices.find(voice => voice.lang?.toLowerCase().startsWith("es-cr"))
-        || voices.find(voice => voice.lang?.toLowerCase().startsWith("es-"))
+      return voices.find(voice => (voice.lang || "").toLowerCase().startsWith("es-cr"))
+        || voices.find(voice => (voice.lang || "").toLowerCase().startsWith("es-"))
         || null;
     }
 
     function chunkText(text, maxLength = 165) {
-      const sentences = text.replace(/\s+/g, " ").split(/(?<=[.!?])\s+/);
+      const normalized = text.replace(/\s+/g, " ");
+      const sentences = normalized.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [normalized];
       const chunks = [];
       let current = "";
       sentences.forEach(sentence => {
@@ -1452,7 +1453,7 @@
       currentUtterance = utterance;
       const voice = getSpanishVoice();
       if (voice) utterance.voice = voice;
-      utterance.lang = voice?.lang || "es-ES";
+      utterance.lang = voice ? voice.lang : "es-ES";
       utterance.rate = 0.88;
       utterance.pitch = 0.96;
       utterance.onend = () => {
@@ -1461,7 +1462,7 @@
       };
       utterance.onerror = () => {
         $("#readTopicBtn")?.classList.remove("is-reading");
-        setReaderStatus("No se pudo iniciar la lectura en este navegador.", "stopped");
+        setReaderStatus("El navegador bloqueó la lectura. Toca nuevamente Leer esta ficha.", "stopped");
       };
       window.speechSynthesis.speak(utterance);
       window.speechSynthesis.resume();
@@ -1488,16 +1489,7 @@
       speechIndex = 0;
       speechChunks = chunkText(text);
       setReaderStatus("Lectura activa.", "active");
-      if (window.speechSynthesis.getVoices().length === 0) {
-        window.speechSynthesis.onvoiceschanged = () => {
-          if (!speechStopped && speechIndex === 0) speakNextChunk();
-        };
-        window.setTimeout(() => {
-          if (!speechStopped && speechIndex === 0 && !window.speechSynthesis.speaking) speakNextChunk();
-        }, 250);
-      } else {
-        speakNextChunk();
-      }
+      speakNextChunk();
     }
 
     function stopReading() {
