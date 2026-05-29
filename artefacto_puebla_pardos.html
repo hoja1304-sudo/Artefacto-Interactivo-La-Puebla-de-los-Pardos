@@ -109,25 +109,30 @@
       margin: 0;
     }
 
-    .hero-actions {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 30px;
-    }
-
     .btn {
-      border: 1px solid var(--ink);
+      position: relative;
+      isolation: isolate;
+      border: 1px solid rgba(29, 26, 22, .86);
       border-radius: 999px;
       min-height: 46px;
-      padding: 0 18px;
+      padding: 0 20px;
       cursor: pointer;
       color: var(--paper);
-      background: var(--ink);
-      transition: transform .18s ease, background .18s ease, color .18s ease, border-color .18s ease;
+      background:
+        linear-gradient(180deg, rgba(255, 253, 248, .16), transparent 45%),
+        var(--ink);
+      box-shadow: 0 12px 28px rgba(29, 26, 22, .16), inset 0 1px 0 rgba(255, 255, 255, .18);
+      transition: transform .24s cubic-bezier(.16, 1, .3, 1), background .24s ease, color .24s ease, border-color .24s ease, box-shadow .24s ease;
     }
 
-    .btn:hover { transform: translateY(-2px); }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 34px rgba(29, 26, 22, .2), inset 0 1px 0 rgba(255, 255, 255, .22);
+    }
+
+    .btn:active {
+      transform: translateY(0) scale(.985);
+    }
 
     .btn.is-reading {
       color: #f8fff9;
@@ -143,8 +148,11 @@
 
     .btn.secondary {
       color: var(--ink);
-      background: rgba(255, 253, 248, .55);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, .72), rgba(255, 253, 248, .48)),
+        rgba(255, 253, 248, .55);
       border-color: var(--line);
+      box-shadow: 0 10px 24px rgba(46, 33, 20, .08), inset 0 1px 0 rgba(255, 255, 255, .56);
     }
 
     [data-theme="dark"] .btn.secondary {
@@ -297,18 +305,29 @@
     }
 
     .tab {
-      border: 0;
+      border: 1px solid transparent;
       border-radius: 999px;
       padding: 10px 14px;
       background: transparent;
       color: var(--muted);
       cursor: pointer;
       white-space: nowrap;
+      transition: transform .22s cubic-bezier(.16, 1, .3, 1), color .22s ease, background .22s ease, border-color .22s ease;
+    }
+
+    .tab:hover {
+      color: var(--ink);
+      background: rgba(255, 253, 248, .54);
+      border-color: var(--line);
     }
 
     .tab.active {
       color: var(--paper);
-      background: var(--accent-2);
+      border-color: rgba(255, 255, 255, .14);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, .14), transparent 48%),
+        var(--accent-2);
+      box-shadow: 0 12px 24px rgba(23, 77, 75, .18), inset 0 1px 0 rgba(255, 255, 255, .18);
     }
 
     .score-pill {
@@ -339,8 +358,17 @@
       min-height: 38px;
       padding: 0 12px;
       color: var(--ink);
-      background: rgba(255, 253, 248, .7);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, .64), rgba(255, 253, 248, .48)),
+        rgba(255, 253, 248, .7);
       cursor: pointer;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .52);
+      transition: transform .22s cubic-bezier(.16, 1, .3, 1), border-color .22s ease, background .22s ease;
+    }
+
+    .icon-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(184, 138, 56, .5);
     }
 
     [data-theme="dark"] .icon-btn,
@@ -384,8 +412,8 @@
 
     .info-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
     }
 
     .info-card, .question-panel, .timeline, .reader-panel {
@@ -396,19 +424,42 @@
     }
 
     .info-card {
-      min-height: 220px;
-      padding: 22px;
+      min-height: 132px;
+      padding: 20px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       cursor: pointer;
-      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+      overflow: hidden;
+      position: relative;
+      transition: transform .24s cubic-bezier(.16, 1, .3, 1), border-color .24s ease, background .24s ease, box-shadow .24s ease;
+    }
+
+    .info-card::after {
+      content: "";
+      position: absolute;
+      inset: auto 16px 14px auto;
+      width: 28px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold));
+      opacity: .75;
     }
 
     .info-card:hover {
       transform: translateY(-4px);
       border-color: rgba(141, 47, 36, .36);
       background: var(--paper);
+      box-shadow: 0 22px 44px rgba(46, 33, 20, .12);
+    }
+
+    .info-card.active {
+      border-color: rgba(184, 138, 56, .62);
+      background: var(--paper);
+      box-shadow: 0 18px 42px rgba(46, 33, 20, .12), inset 0 1px 0 rgba(255, 255, 255, .5);
+    }
+
+    .info-card:active {
+      transform: translateY(-1px) scale(.99);
     }
 
     .kicker {
@@ -425,9 +476,22 @@
       line-height: 1.15;
     }
 
+    .info-card h3 {
+      margin-bottom: 0;
+    }
+
     .info-card p {
       margin: 0;
       color: var(--muted);
+    }
+
+    .panorama-reader {
+      margin-top: 22px;
+      animation: rise .28s ease both;
+    }
+
+    .panorama-reader[hidden] {
+      display: none;
     }
 
     .reader-layout {
@@ -731,7 +795,6 @@
         font-size: 17px;
       }
 
-      .hero-actions,
       .reader-actions,
       .result-actions {
         display: grid;
@@ -797,10 +860,6 @@
         <span class="eyebrow">Artefacto interactivo | Historia de Costa Rica</span>
         <h1>La Puebla de los Pardos en el siglo XVII</h1>
         <p class="lead">Explora el documento, identifica sus ideas centrales y responde preguntas con retroalimentación inmediata y puntos por aciertos.</p>
-        <div class="hero-actions">
-          <button class="btn" data-go="lector">Explorar documento</button>
-          <button class="btn secondary" data-go="reto">Iniciar reto</button>
-        </div>
       </div>
 
       <div class="hero-side">
@@ -834,7 +893,6 @@
     <div class="shell nav-inner">
       <div class="tabs" role="tablist" aria-label="Secciones del artefacto">
         <button class="tab active" data-tab="panorama">Panorama</button>
-        <button class="tab" data-tab="lector">Lector</button>
         <button class="tab" data-tab="linea">Línea de tiempo</button>
         <button class="tab" data-tab="reto">Reto</button>
         <button class="tab" data-tab="creditos">Créditos</button>
@@ -854,18 +912,8 @@
       </div>
 
       <div class="info-grid" id="cards"></div>
-    </section>
 
-    <section id="lector">
-      <div class="section-head">
-        <h2>Lector interactivo</h2>
-        <p>Selecciona un eje del documento. Cada ficha amplía una parte del argumento y puede leerse en voz alta.</p>
-      </div>
-
-      <div class="reader-layout">
-        <aside class="reader-panel">
-          <div class="topic-list" id="topicList"></div>
-        </aside>
+      <div class="panorama-reader" id="panoramaReader" hidden>
         <article class="reader-panel reader-content" id="readerContent"></article>
       </div>
     </section>
@@ -1305,23 +1353,13 @@
     const $$ = (selector) => [...document.querySelectorAll(selector)];
 
     function renderCards() {
-      $("#cards").innerHTML = topics.slice(0, 6).map(topic => `
-        <article class="info-card" data-open-topic="${topic.id}">
+      $("#cards").innerHTML = topics.map(topic => `
+        <article class="info-card ${topic.id === activeTopic && !$("#panoramaReader").hidden ? "active" : ""}" data-open-topic="${topic.id}">
           <span class="kicker">${topic.tag}</span>
           <div>
             <h3>${topic.title}</h3>
-            <p>${topic.text}</p>
           </div>
         </article>
-      `).join("");
-    }
-
-    function renderTopicList(filter = "") {
-      $("#topicList").innerHTML = topics.map(topic => `
-        <button class="topic-btn ${topic.id === activeTopic ? "active" : ""}" data-topic="${topic.id}">
-          <strong>${topic.title}</strong><br>
-          <span>${topic.tag}</span>
-        </button>
       `).join("");
     }
 
@@ -1334,6 +1372,7 @@
         <div class="reader-actions">
           <button class="btn" id="readTopicBtn" type="button">Leer esta ficha</button>
           <button class="btn secondary" id="stopReadBtn" type="button">Detener lectura</button>
+          <button class="btn secondary" id="backToPanoramaBtn" type="button">Regresar</button>
         </div>
         <p class="reader-status" id="readerStatus" aria-live="polite">Lectura lista.</p>
         <div class="detail-list">
@@ -1343,7 +1382,6 @@
           ${topic.facts.map(([label, value]) => `<div class="fact"><strong>${value}</strong><span>${label}</span></div>`).join("")}
         </div>
       `;
-      renderTopicList();
     }
 
     function renderTimeline() {
@@ -1359,9 +1397,28 @@
     }
 
     function setTab(id) {
+      if (id === "lector") id = "panorama";
       $$("section").forEach(section => section.classList.toggle("active", section.id === id));
       $$(".tab").forEach(tab => tab.classList.toggle("active", tab.dataset.tab === id));
       window.scrollTo({ top: document.querySelector("nav").offsetTop, behavior: "smooth" });
+    }
+
+    function openPanoramaReader(topicId) {
+      activeTopic = topicId;
+      renderTopic();
+      $("#panoramaReader").hidden = false;
+      renderCards();
+      setTab("panorama");
+      requestAnimationFrame(() => {
+        $("#panoramaReader").scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+
+    function closePanoramaReader() {
+      stopReading();
+      $("#panoramaReader").hidden = true;
+      renderCards();
+      $("#cards").scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
     function updateScore() {
@@ -1523,21 +1580,14 @@
 
       const openTopic = event.target.closest("[data-open-topic]");
       if (openTopic) {
-        activeTopic = openTopic.dataset.openTopic;
-        renderTopic();
-        setTab("lector");
-      }
-
-      const topicBtn = event.target.closest("[data-topic]");
-      if (topicBtn) {
-        activeTopic = topicBtn.dataset.topic;
-        if ("speechSynthesis" in window) window.speechSynthesis.cancel();
-        renderTopic();
+        openPanoramaReader(openTopic.dataset.openTopic);
       }
 
       if (event.target.closest("#readTopicBtn")) speakCurrentTopic();
 
       if (event.target.closest("#stopReadBtn")) stopReading();
+
+      if (event.target.closest("#backToPanoramaBtn")) closePanoramaReader();
 
       const option = event.target.closest("[data-option]");
       if (option && !answered) {
@@ -1586,7 +1636,6 @@
 
     applyTheme(localStorage.getItem("puebla-theme") || "light");
     renderCards();
-    renderTopicList();
     renderTopic();
     renderTimeline();
     resetQuiz();
