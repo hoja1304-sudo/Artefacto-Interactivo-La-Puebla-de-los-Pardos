@@ -484,6 +484,23 @@
       border-left: 2px solid var(--gold);
     }
 
+    .reader-status {
+      min-height: 24px;
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .reader-status.active {
+      color: var(--ok);
+      font-weight: 700;
+    }
+
+    .reader-status.stopped {
+      color: var(--bad);
+      font-weight: 700;
+    }
+
     .fact-row {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1279,6 +1296,10 @@
     let score = 0;
     let answered = false;
     let quizFinished = false;
+    let currentUtterance = null;
+    let speechChunks = [];
+    let speechIndex = 0;
+    let speechStopped = true;
 
     const $ = (selector) => document.querySelector(selector);
     const $$ = (selector) => [...document.querySelectorAll(selector)];
@@ -1314,6 +1335,7 @@
           <button class="btn" id="readTopicBtn" type="button">Leer esta ficha</button>
           <button class="btn secondary" id="stopReadBtn" type="button">Detener lectura</button>
         </div>
+        <p class="reader-status" id="readerStatus" aria-live="polite">Lectura lista.</p>
         <div class="detail-list">
           ${(topic.detail || []).map(item => `<p>${item}</p>`).join("")}
         </div>
@@ -1387,9 +1409,67 @@
       $("#progressBar").style.width = "100%";
     }
 
+    function setReaderStatus(message, state = "") {
+      const status = $("#readerStatus");
+      if (!status) return;
+      status.textContent = message;
+      status.classList.toggle("active", state === "active");
+      status.classList.toggle("stopped", state === "stopped");
+    }
+
+    function getSpanishVoice() {
+      const voices = window.speechSynthesis.getVoices();
+      return voices.find(voice => voice.lang?.toLowerCase().startsWith("es-cr"))
+        || voices.find(voice => voice.lang?.toLowerCase().startsWith("es-"))
+        || null;
+    }
+
+    function chunkText(text, maxLength = 165) {
+      const sentences = text.replace(/\s+/g, " ").split(/(?<=[.!?])\s+/);
+      const chunks = [];
+      let current = "";
+      sentences.forEach(sentence => {
+        if ((current + " " + sentence).trim().length > maxLength && current) {
+          chunks.push(current.trim());
+          current = sentence;
+        } else {
+          current = `${current} ${sentence}`.trim();
+        }
+      });
+      if (current) chunks.push(current.trim());
+      return chunks;
+    }
+
+    function speakNextChunk() {
+      if (speechStopped || speechIndex >= speechChunks.length) {
+        $("#readTopicBtn")?.classList.remove("is-reading");
+        currentUtterance = null;
+        if (!speechStopped) setReaderStatus("Lectura finalizada.");
+        return;
+      }
+
+      const utterance = new SpeechSynthesisUtterance(speechChunks[speechIndex]);
+      currentUtterance = utterance;
+      const voice = getSpanishVoice();
+      if (voice) utterance.voice = voice;
+      utterance.lang = voice?.lang || "es-ES";
+      utterance.rate = 0.88;
+      utterance.pitch = 0.96;
+      utterance.onend = () => {
+        speechIndex += 1;
+        speakNextChunk();
+      };
+      utterance.onerror = () => {
+        $("#readTopicBtn")?.classList.remove("is-reading");
+        setReaderStatus("No se pudo iniciar la lectura en este navegador.", "stopped");
+      };
+      window.speechSynthesis.speak(utterance);
+      window.speechSynthesis.resume();
+    }
+
     function speakCurrentTopic() {
       if (!("speechSynthesis" in window)) {
-        $("#feedback") && ($("#feedback").textContent = "Este navegador no tiene lectura en voz alta disponible.");
+        setReaderStatus("Este navegador no tiene lectura en voz alta disponible.", "stopped");
         return;
       }
       const readButton = $("#readTopicBtn");
@@ -1404,20 +1484,30 @@
         ...topic.facts.map(([label, value]) => `${label}: ${value}`)
       ].join(". ");
       window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = "es-CR";
-      utterance.rate = 0.92;
-      utterance.pitch = 0.95;
-      utterance.onend = () => {
-        readButton?.classList.remove("is-reading");
-      };
-      window.speechSynthesis.speak(utterance);
+      speechStopped = false;
+      speechIndex = 0;
+      speechChunks = chunkText(text);
+      setReaderStatus("Lectura activa.", "active");
+      if (window.speechSynthesis.getVoices().length === 0) {
+        window.speechSynthesis.onvoiceschanged = () => {
+          if (!speechStopped && speechIndex === 0) speakNextChunk();
+        };
+        window.setTimeout(() => {
+          if (!speechStopped && speechIndex === 0 && !window.speechSynthesis.speaking) speakNextChunk();
+        }, 250);
+      } else {
+        speakNextChunk();
+      }
     }
 
     function stopReading() {
+      speechStopped = true;
+      speechChunks = [];
+      currentUtterance = null;
       if ("speechSynthesis" in window) window.speechSynthesis.cancel();
       $("#readTopicBtn")?.classList.remove("is-reading");
       $("#stopReadBtn")?.classList.add("is-stopping");
+      setReaderStatus("Lectura detenida.", "stopped");
     }
 
     function applyTheme(theme) {
