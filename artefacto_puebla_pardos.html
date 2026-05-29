@@ -1,0 +1,1508 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>La Puebla de los Pardos | Artefacto interactivo</title>
+  <style>
+    :root {
+      --bg: #f7f4ef;
+      --ink: #1d1a16;
+      --muted: #6e675d;
+      --line: #ded6c9;
+      --paper: #fffdf8;
+      --paper-2: #f0ebe2;
+      --accent: #8d2f24;
+      --accent-2: #174d4b;
+      --gold: #b88a38;
+      --ok: #1c7c54;
+      --bad: #a63d40;
+      --shadow: 0 24px 70px rgba(46, 33, 20, .13);
+      color-scheme: light;
+    }
+
+    [data-theme="dark"] {
+      --bg: #171411;
+      --ink: #f3eadc;
+      --muted: #b8aa98;
+      --line: #3f372f;
+      --paper: #211d18;
+      --paper-2: #2b251f;
+      --accent: #d07a63;
+      --accent-2: #78b7ae;
+      --gold: #d7ad63;
+      --ok: #67c79b;
+      --bad: #e07a7d;
+      --shadow: 0 24px 70px rgba(0, 0, 0, .34);
+      color-scheme: dark;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background:
+        linear-gradient(90deg, rgba(29, 26, 22, .035) 1px, transparent 1px) 0 0 / 42px 42px,
+        linear-gradient(180deg, rgba(141, 47, 36, .08), transparent 42vh),
+        var(--bg);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+
+    [data-theme="dark"] body {
+      background:
+        linear-gradient(90deg, rgba(255, 253, 248, .035) 1px, transparent 1px) 0 0 / 42px 42px,
+        linear-gradient(180deg, rgba(208, 122, 99, .1), transparent 42vh),
+        var(--bg);
+    }
+
+    button, input { font: inherit; }
+
+    .shell {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    header {
+      min-height: 92vh;
+      display: grid;
+      align-items: end;
+      padding: 40px 0 28px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 34px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      width: fit-content;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 7px 12px;
+      color: var(--muted);
+      background: rgba(255, 253, 248, .72);
+      backdrop-filter: blur(12px);
+      font-size: 13px;
+      letter-spacing: .02em;
+    }
+
+    h1 {
+      margin: 22px 0 16px;
+      max-width: 780px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(48px, 7vw, 104px);
+      line-height: .93;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 660px;
+      color: var(--muted);
+      font-size: clamp(18px, 2vw, 23px);
+      margin: 0;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+
+    .btn {
+      border: 1px solid var(--ink);
+      border-radius: 999px;
+      min-height: 46px;
+      padding: 0 18px;
+      cursor: pointer;
+      color: var(--paper);
+      background: var(--ink);
+      transition: transform .18s ease, background .18s ease, color .18s ease, border-color .18s ease;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+
+    .btn.is-reading {
+      color: #f8fff9;
+      background: var(--ok);
+      border-color: var(--ok);
+    }
+
+    .btn.is-stopping {
+      color: #fff8f8;
+      background: var(--bad);
+      border-color: var(--bad);
+    }
+
+    .btn.secondary {
+      color: var(--ink);
+      background: rgba(255, 253, 248, .55);
+      border-color: var(--line);
+    }
+
+    [data-theme="dark"] .btn.secondary {
+      background: rgba(243, 234, 220, .08);
+    }
+
+    .document-card {
+      background: rgba(255, 253, 248, .78);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      border-radius: 8px;
+      padding: 26px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    [data-theme="dark"] .document-card,
+    [data-theme="dark"] .info-card,
+    [data-theme="dark"] .question-panel,
+    [data-theme="dark"] .timeline,
+    [data-theme="dark"] .reader-panel,
+    [data-theme="dark"] .source-card {
+      background: rgba(33, 29, 24, .82);
+    }
+
+    .hero-side {
+      display: grid;
+      gap: 16px;
+    }
+
+    .hero-visual {
+      margin: 0;
+      border: 1px solid rgba(222, 214, 201, .92);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      background: var(--paper);
+    }
+
+    [data-theme="dark"] .hero-visual {
+      border-color: var(--line);
+      background: var(--paper);
+    }
+
+    .hero-visual img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+    }
+
+    .hero-visual figcaption {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      color: var(--muted);
+      font-size: 13px;
+      border-top: 1px solid var(--line);
+    }
+
+    .document-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent), var(--gold), var(--accent-2));
+    }
+
+    .doc-title {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 28px;
+      line-height: 1.05;
+      margin: 0 0 20px;
+    }
+
+    .meta-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .meta-item {
+      display: grid;
+      grid-template-columns: 118px 1fr;
+      gap: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .meta-item span:first-child {
+      color: var(--muted);
+      font-size: 13px;
+      text-transform: uppercase;
+    }
+
+    .credit-strip {
+      display: grid;
+      gap: 8px;
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 8px;
+      background: #191612;
+      color: #fff7e8;
+    }
+
+    [data-theme="dark"] .credit-strip,
+    [data-theme="dark"] .side-stat {
+      background: #0f0d0b;
+      border: 1px solid #5b4c3a;
+      color: #fff7e8;
+    }
+
+    .credit-strip small {
+      color: #d5c5ac;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    [data-theme="dark"] .credit-strip small,
+    [data-theme="dark"] .credit-strip span {
+      color: #e3d1b7;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-block: 1px solid var(--line);
+      background: rgba(247, 244, 239, .82);
+      backdrop-filter: blur(18px);
+    }
+
+    [data-theme="dark"] nav {
+      background: rgba(23, 20, 17, .86);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 64px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .tab {
+      border: 0;
+      border-radius: 999px;
+      padding: 10px 14px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .tab.active {
+      color: var(--paper);
+      background: var(--accent-2);
+    }
+
+    .score-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: max-content;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: rgba(255, 253, 248, .7);
+      color: var(--muted);
+    }
+
+    .score-pill strong { color: var(--ink); }
+
+    .nav-tools {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .icon-btn {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      min-height: 38px;
+      padding: 0 12px;
+      color: var(--ink);
+      background: rgba(255, 253, 248, .7);
+      cursor: pointer;
+    }
+
+    [data-theme="dark"] .icon-btn,
+    [data-theme="dark"] .score-pill {
+      background: rgba(243, 234, 220, .08);
+    }
+
+    main { padding: 52px 0 86px; }
+
+    section {
+      display: none;
+      animation: rise .28s ease both;
+    }
+
+    section.active { display: block; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 390px);
+      gap: 32px;
+      align-items: end;
+      margin-bottom: 28px;
+    }
+
+    h2 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(34px, 4vw, 58px);
+      line-height: 1;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .info-card, .question-panel, .timeline, .reader-panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 253, 248, .72);
+      box-shadow: 0 16px 40px rgba(46, 33, 20, .08);
+    }
+
+    .info-card {
+      min-height: 220px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+
+    .info-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(141, 47, 36, .36);
+      background: var(--paper);
+    }
+
+    .kicker {
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .info-card h3, .reader-panel h3 {
+      margin: 12px 0;
+      font-size: 21px;
+      line-height: 1.15;
+    }
+
+    .info-card p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .reader-layout {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .reader-panel { padding: 22px; }
+
+    .topic-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .topic-btn {
+      border: 1px solid transparent;
+      border-radius: 8px;
+      text-align: left;
+      padding: 13px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .topic-btn.active, .topic-btn:hover {
+      border-color: var(--line);
+      color: var(--ink);
+      background: var(--paper);
+    }
+
+    .reader-content {
+      min-height: 420px;
+    }
+
+    .reader-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 18px 0 4px;
+    }
+
+    .detail-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+      color: var(--muted);
+    }
+
+    .detail-list p {
+      margin: 0;
+      padding-left: 14px;
+      border-left: 2px solid var(--gold);
+    }
+
+    .fact-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .fact {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      background: var(--paper-2);
+    }
+
+    .fact strong {
+      display: block;
+      font-size: 23px;
+      margin-bottom: 4px;
+    }
+
+    .timeline {
+      padding: 28px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .event {
+      display: grid;
+      grid-template-columns: 96px 1fr;
+      gap: 18px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .event:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .year {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 28px;
+      color: var(--accent);
+    }
+
+    .event h3 {
+      margin: 0 0 6px;
+    }
+
+    .event p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .quiz-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .question-panel { padding: 26px; }
+
+    .question-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .question {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(26px, 3vw, 38px);
+      line-height: 1.1;
+      margin: 0 0 20px;
+    }
+
+    .options {
+      display: grid;
+      gap: 10px;
+    }
+
+    .option {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      text-align: left;
+      background: var(--paper);
+      cursor: pointer;
+      transition: transform .16s ease, border-color .16s ease;
+    }
+
+    [data-theme="dark"] .option,
+    [data-theme="dark"] .topic-btn.active,
+    [data-theme="dark"] .topic-btn:hover {
+      background: rgba(243, 234, 220, .07);
+    }
+
+    .option:hover { transform: translateY(-2px); }
+    .option.correct { border-color: rgba(28, 124, 84, .7); background: rgba(28, 124, 84, .1); }
+    .option.incorrect { border-color: rgba(166, 61, 64, .7); background: rgba(166, 61, 64, .09); }
+
+    .feedback {
+      min-height: 68px;
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 8px;
+      background: var(--paper-2);
+      color: var(--muted);
+    }
+
+    .side-stat {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #191612;
+      color: var(--paper);
+    }
+
+    [data-theme="dark"] .side-stat {
+      background: #0f0d0b;
+    }
+
+    .side-stat .big {
+      display: block;
+      margin: 10px 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 68px;
+      line-height: .9;
+      color: #f5dfb5;
+    }
+
+    .progress {
+      height: 10px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255, 253, 248, .18);
+      margin-top: 18px;
+    }
+
+    .progress span {
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--gold), #f5dfb5);
+      transition: width .2s ease;
+    }
+
+    .result-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .sources {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .source-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px;
+      background: rgba(255, 253, 248, .72);
+    }
+
+    .source-card p { color: var(--muted); }
+
+    a {
+      color: var(--accent-2);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 4px;
+    }
+
+    @media (max-width: 860px) {
+      .hero, .section-head, .reader-layout, .quiz-grid, .sources {
+        grid-template-columns: 1fr;
+      }
+
+      .info-grid, .fact-row {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-inner {
+        align-items: stretch;
+        flex-direction: column;
+        padding: 10px 0;
+      }
+
+      .score-pill {
+        justify-content: center;
+      }
+
+      .nav-tools {
+        justify-content: center;
+      }
+
+      .meta-item {
+        grid-template-columns: 1fr;
+        gap: 4px;
+      }
+
+      .event {
+        grid-template-columns: 1fr;
+        gap: 4px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .shell {
+        width: min(100% - 22px, 1180px);
+      }
+
+      header {
+        min-height: auto;
+        padding: 28px 0 18px;
+      }
+
+      h1 {
+        font-size: clamp(38px, 14vw, 58px);
+      }
+
+      .lead {
+        font-size: 17px;
+      }
+
+      .hero-actions,
+      .reader-actions,
+      .result-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .btn,
+      .icon-btn,
+      .tab,
+      .option,
+      .topic-btn {
+        min-height: 48px;
+      }
+
+      .document-card,
+      .reader-panel,
+      .question-panel,
+      .source-card,
+      .timeline {
+        padding: 18px;
+      }
+
+      .hero-visual figcaption {
+        display: grid;
+      }
+    }
+
+    @media (min-width: 1400px) {
+      .shell {
+        width: min(1320px, calc(100% - 64px));
+      }
+
+      body {
+        font-size: 18px;
+      }
+
+      .reader-layout {
+        grid-template-columns: 360px 1fr;
+      }
+
+      .topic-btn,
+      .option,
+      .btn {
+        min-height: 52px;
+      }
+    }
+
+    @media (pointer: coarse) {
+      .tab,
+      .btn,
+      .icon-btn,
+      .option,
+      .topic-btn {
+        min-height: 50px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="shell hero">
+      <div>
+        <span class="eyebrow">Artefacto interactivo | Historia de Costa Rica</span>
+        <h1>La Puebla de los Pardos en el siglo XVII</h1>
+        <p class="lead">Explora el documento, identifica sus ideas centrales y responde preguntas con retroalimentación inmediata y puntos por aciertos.</p>
+        <div class="hero-actions">
+          <button class="btn" data-go="lector">Explorar documento</button>
+          <button class="btn secondary" data-go="reto">Iniciar reto</button>
+        </div>
+      </div>
+
+      <div class="hero-side">
+        <figure class="hero-visual">
+          <img src="La%20Puebla.png" alt="Ilustración histórica titulada La Puebla de los Pardos">
+          <figcaption>
+            <span>Portada visual del artefacto</span>
+            <span>La Puebla de los Pardos</span>
+          </figcaption>
+        </figure>
+
+        <aside class="document-card" aria-label="Ficha del documento">
+          <p class="doc-title">Ficha del documento</p>
+          <div class="meta-grid">
+            <div class="meta-item"><span>Documento</span><strong>La Puebla de los Pardos en el siglo XVII</strong></div>
+            <div class="meta-item"><span>Autora</span><strong>Rina Cáceres Gómez</strong></div>
+            <div class="meta-item"><span>Publicación</span><strong>Revista de Historia, n.° 34, 1996, pp. 83-113</strong></div>
+            <div class="meta-item"><span>Tema</span><strong>Población negra, mulata y parda en Cartago colonial</strong></div>
+          </div>
+          <div class="credit-strip">
+            <small>Elaborado por</small>
+            <strong>Alberto Jiménez Ruiz</strong>
+            <span>Asesor regional de Matemática, DRE-Cartago</span>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <div class="shell nav-inner">
+      <div class="tabs" role="tablist" aria-label="Secciones del artefacto">
+        <button class="tab active" data-tab="panorama">Panorama</button>
+        <button class="tab" data-tab="lector">Lector</button>
+        <button class="tab" data-tab="linea">Línea de tiempo</button>
+        <button class="tab" data-tab="reto">Reto</button>
+        <button class="tab" data-tab="creditos">Créditos</button>
+      </div>
+      <div class="nav-tools">
+        <button class="icon-btn" id="themeBtn" type="button" aria-label="Cambiar tema">Oscuro</button>
+        <div class="score-pill">Puntos: <strong id="navScore">0</strong></div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="shell">
+    <section id="panorama" class="active">
+      <div class="section-head">
+        <h2>Ideas para entrar al texto</h2>
+        <p>El artículo explica cómo las poblaciones negras, mulatas y pardas participaron en la vida urbana, religiosa, laboral, militar y económica de Cartago, capital colonial de Costa Rica.</p>
+      </div>
+
+      <div class="info-grid" id="cards"></div>
+    </section>
+
+    <section id="lector">
+      <div class="section-head">
+        <h2>Lector interactivo</h2>
+        <p>Selecciona un eje del documento. Cada ficha amplía una parte del argumento y puede leerse en voz alta.</p>
+      </div>
+
+      <div class="reader-layout">
+        <aside class="reader-panel">
+          <div class="topic-list" id="topicList"></div>
+        </aside>
+        <article class="reader-panel reader-content" id="readerContent"></article>
+      </div>
+    </section>
+
+    <section id="linea">
+      <div class="section-head">
+        <h2>Secuencia histórica</h2>
+        <p>Una ruta breve por los momentos mencionados o derivados directamente del documento.</p>
+      </div>
+      <div class="timeline" id="timeline"></div>
+    </section>
+
+    <section id="reto">
+      <div class="section-head">
+        <h2>Reto de comprensión</h2>
+        <p>Responde cinco preguntas seleccionadas al azar del banco del documento. Cada acierto suma 10 puntos; el sistema muestra avance y resultado final.</p>
+      </div>
+
+      <div class="quiz-grid">
+        <article class="question-panel">
+          <div class="question-meta">
+            <span id="questionCount">Pregunta 1 de 10</span>
+            <span id="questionPoints">+10 puntos</span>
+          </div>
+          <h3 class="question" id="questionText"></h3>
+          <div class="options" id="options"></div>
+          <div class="feedback" id="feedback">Selecciona una respuesta para ver la retroalimentación.</div>
+          <div class="result-actions">
+            <button class="btn" id="nextBtn">Siguiente</button>
+            <button class="btn secondary" id="restartBtn">Reiniciar</button>
+          </div>
+        </article>
+
+        <aside class="side-stat">
+          <span class="kicker">Marcador</span>
+          <span class="big" id="score">0</span>
+          <p id="scoreNote">Aún no hay respuestas registradas.</p>
+          <div class="progress" aria-label="Progreso del reto"><span id="progressBar"></span></div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="creditos">
+      <div class="section-head">
+        <h2>Créditos y fuente</h2>
+        <p>Información bibliográfica y reconocimiento de elaboración del artefacto.</p>
+      </div>
+
+      <div class="sources">
+        <div class="source-card">
+          <span class="kicker">Documento base</span>
+          <h3>La Puebla de los Pardos en el siglo XVII</h3>
+          <p>Autora: Rina Cáceres Gómez. Revista de Historia, n.° 34, julio-diciembre de 1996, páginas 83-113. El texto estudia la presencia y participación social de poblaciones negras, mulatas y pardas en Cartago colonial.</p>
+          <p><a href="La_Puebla_de_los_Pardos_en_el_siglo_XVII.pdf" target="_blank" rel="noopener">Abrir PDF local</a></p>
+        </div>
+        <div class="source-card">
+          <span class="kicker">Elaboración del artefacto</span>
+          <h3>Alberto Jiménez Ruiz</h3>
+          <p>Asesor regional de Matemática, DRE-Cartago.</p>
+          <p>Diseñado como apoyo interactivo para explorar información histórica y practicar comprensión con preguntas autoevaluables.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const topics = [
+      {
+        id: "origen",
+        tag: "Contexto",
+        title: "Cartago y La Gotera",
+        text: "El documento ubica el proceso fuera del casco de la ciudad de Cartago, capital colonial de Costa Rica. En los ejidos al este, en el paraje llamado La Gotera, se concentraron poco a poco pardos, mulatos y negros libres.",
+        facts: [["Lugar", "La Gotera"], ["Ciudad", "Cartago"], ["Siglo", "XVII"]],
+        detail: [
+          "La ubicacion fuera del casco urbano muestra una politica colonial de separacion espacial, pero tambien un proceso de formacion comunitaria.",
+          "El articulo presenta La Gotera como un punto donde confluyen desplazamientos, doctrina religiosa, milicias y acceso a solares."
+        ]
+      },
+      {
+        id: "poblacion",
+        tag: "Población",
+        title: "Negros, mulatos y pardos",
+        text: "La autora analiza cómo estos grupos no fueron marginales a la vida urbana: participaron en ámbitos religiosos, económicos, laborales, militares y de organización comunitaria.",
+        facts: [["Eje", "Vida urbana"], ["Grupos", "Negros, mulatos y pardos"], ["Enfoque", "Participación social"]],
+        detail: [
+          "La lectura rompe la idea de una poblacion solamente subordinada: muestra actores que negocian, trabajan, sirven militarmente y sostienen instituciones.",
+          "La categoria pardo aparece asociada a una realidad social compleja de castas, oficios, vecindad y participacion urbana."
+        ]
+      },
+      {
+        id: "virgen",
+        tag: "Religión",
+        title: "La Virgen de los Ángeles",
+        text: "El artículo vincula la tradición del hallazgo de la imagen con una mujer parda llamada Juana Pereira, nombre planteado por Monseñor Sanabria como hipótesis histórica. También destaca el crecimiento posterior del culto.",
+        facts: [["Tradición", "Juana Pereira"], ["Lugar", "La Gotera"], ["Patronazgo", "1782"]],
+        detail: [
+          "El texto distingue entre tradicion religiosa e hipotesis historica: el nombre Juana Pereira se mantiene mientras no exista documentacion que lo sustituya.",
+          "El culto, inicialmente modesto, se enlaza con la organizacion de la Puebla y con la presencia de poblacion parda en responsabilidades religiosas."
+        ]
+      },
+      {
+        id: "cofradia",
+        tag: "Organización",
+        title: "Cofradía y responsabilidad parda",
+        text: "La cofradía de la Virgen de los Ángeles se fundó en 1653. Con el tiempo, la responsabilidad práctica quedó en manos de hermanos pardos, en un marco de participación relativamente independiente.",
+        facts: [["Año", "1653"], ["Institución", "Cofradía"], ["Rol", "Hermanos pardos"]],
+        detail: [
+          "La cofradia sirvio como espacio de sociabilidad, fiesta, administracion de recursos y afirmacion comunitaria.",
+          "La autora senala que la ermita y la cofradia fueron pobres en el siglo XVII, lo que contribuyo a que los mayordomos espanoles perdieran interes y los pardos asumieran mas responsabilidad."
+        ]
+      },
+      {
+        id: "milicias",
+        tag: "Milicias",
+        title: "Servicio militar y solares",
+        text: "Juan Fernández de Salinas y de la Cerda impulsó la organización de milicias de negros, mulatos y pardos. La adscripción militar y la asignación de solares ayudaron a hacer efectiva la Puebla.",
+        facts: [["Gobernador", "Fernández de Salinas"], ["Función", "Milicias"], ["Base", "Solares"]],
+        detail: [
+          "Las milicias aparecen como un mecanismo de control colonial, pero tambien como una via de reconocimiento funcional para la poblacion de la Puebla.",
+          "La formacion del asentamiento no dependio solo de la religion: tambien se sostuvo en obligaciones militares y en la organizacion territorial."
+        ]
+      },
+      {
+        id: "cabildo",
+        tag: "Derechos",
+        title: "Demandas de 1676",
+        text: "El 1 de enero de 1676, vecinos mulatos, negros libres y mestizos bajos plantearon demandas al cabildo: continuar la fundación, tener representación y nombramientos propios, y solicitar exoneración del terrazgo de ejidos.",
+        facts: [["Año", "1676"], ["Demandas", "3"], ["Instancia", "Cabildo"]],
+        detail: [
+          "La peticion de 1676 es clave porque muestra agencia colectiva: los vecinos no aparecen solo como poblacion asentada, sino como grupo que solicita condiciones politicas y fiscales.",
+          "El cabildo concedio formar poblado, repartir solares y nombrar autoridades internas, bajo supervision colonial."
+        ]
+      },
+      {
+        id: "oficios",
+        tag: "Trabajo",
+        title: "Artes, oficios y aprendizaje",
+        text: "El texto muestra que la población negra, mulata y mestiza desempeñó un papel importante en la actividad artesanal de Cartago. La ruta de formación podía ir de aprendiz a oficial y luego a maestro.",
+        facts: [["Ruta", "Aprendiz-oficial-maestro"], ["Actividad", "Artes y oficios"], ["Ciudad", "Cartago"]],
+        detail: [
+          "En comparacion con ciudades mayores como Mexico o Guatemala, Cartago tuvo una estructura mas modesta, lo que pudo flexibilizar barreras de casta en algunos oficios.",
+          "La presencia de maestros y aprendices evidencia participacion economica concreta, no solo registro demografico."
+        ]
+      },
+      {
+        id: "servicios",
+        tag: "Economía",
+        title: "Servicios y contratos",
+        text: "Los contratos de servicio podían implicar permanencia en la casa del patrón, comida, vestido y a veces jornal. El documento distingue servicios pagados anualmente y servidumbre compensada con techo, comida y vestido.",
+        facts: [["Modalidad", "Contratos"], ["Pago", "Anual o manutención"], ["Caso", "Lorenzo de Ocampo"]],
+        detail: [
+          "Algunos contratos eran prolongados y podian durar hasta el matrimonio, especialmente en el caso de ninas menores vinculadas a familias pobres.",
+          "El caso de Lorenzo de Ocampo muestra servicio por dos anos y pago pactado, con obligaciones de buen tratamiento."
+        ]
+      },
+      {
+        id: "credito",
+        tag: "Transacciones",
+        title: "Crédito y comercio",
+        text: "Cáceres muestra que la población afrodescendiente participó en transacciones crediticias. Incluso personas esclavizadas podían figurar en relaciones de deuda o pago gracias a su trabajo o habilidad económica.",
+        facts: [["Tema", "Crédito"], ["Evidencia", "Protocolos"], ["Lectura", "Participación económica"]],
+        detail: [
+          "Los protocolos de Cartago muestran compras a credito, deudas, servicios y pagos a plazo en los que participaron mulatos, pardos, negros libres y esclavizados.",
+          "La autora subraya que, a pesar de la casta, la economia cotidiana abria espacios de negociacion y circulacion."
+        ]
+      },
+      {
+        id: "fuentes",
+        tag: "Método histórico",
+        title: "Protocolos, padrones y cabildo",
+        text: "El argumento se apoya en documentos coloniales: protocolos, cabildos, padrones y referencias historiográficas. Esas fuentes permiten reconstruir prácticas sociales que no siempre aparecen en relatos oficiales.",
+        facts: [["Fuentes", "Protocolos"], ["Lectura", "Archivo colonial"], ["Uso", "Evidencia social"]],
+        detail: [
+          "La autora cruza registros de confirmaciones, testamentos, contratos, ordenanzas, deudas y acuerdos de cabildo.",
+          "El valor del documento esta en volver visibles sujetos historicos que muchas veces aparecen dispersos en archivos administrativos."
+        ]
+      },
+      {
+        id: "fiestas",
+        tag: "Cultura",
+        title: "Fiestas y vida comunitaria",
+        text: "Las festividades de la Virgen de los Ángeles incluían organización, celebraciones, faroles, cantos, fandangos y actividades en torno al santuario.",
+        facts: [["Fecha", "2 de agosto"], ["Duración", "Quince días"], ["Espacio", "Santuario"]],
+        detail: [
+          "La fiesta religiosa funciona como expresion de comunidad y como escenario de participacion parda.",
+          "La celebracion no era solo devocional: articulaba economia, prestigio, cargos y redes sociales."
+        ]
+      },
+      {
+        id: "genero",
+        tag: "Género",
+        title: "Mujeres, niñas y servicio",
+        text: "El documento destaca que muchos contratos de servicio involucraban a niñas menores de 13 años, mulatas, pardas y negras, procedentes de familias pobres de La Gotera.",
+        facts: [["Grupo", "Niñas menores"], ["Edad", "Menores de 13"], ["Condición", "Familias pobres"]],
+        detail: [
+          "La dimension de genero permite observar desigualdades mas profundas dentro de la poblacion colonial.",
+          "Los contratos muestran mecanismos de dependencia, manutencion y trabajo que afectaban especialmente a mujeres y menores."
+        ]
+      },
+      {
+        id: "tesis",
+        tag: "Tesis",
+        title: "Una lectura de agencia",
+        text: "La tesis fuerte del artículo es que la población negra, mulata y parda participó en todos los órdenes de la vida urbana de Cartago, aunque bajo jerarquías coloniales.",
+        facts: [["Idea", "Agencia"], ["Marco", "Jerarquía colonial"], ["Resultado", "Participación urbana"]],
+        detail: [
+          "La Puebla de los Pardos no se entiende solo como periferia: tambien fue un espacio de organizacion, reclamo, trabajo y memoria.",
+          "El documento ayuda a discutir como se construyo la presencia afrodescendiente en la historia colonial costarricense."
+        ]
+      }
+    ];
+
+    const timelineItems = [
+      ["1611", "Decadencia regional", "El texto relaciona posibles desplazamientos con la decadencia de la región de astilleros después de 1611."],
+      ["1625", "Visita episcopal", "En la visita del obispo Valtonado se confirmaron 685 personas; 65 fueron negros y mulatos, libres y esclavos."],
+      ["1629", "Dispersión de la población", "Muchos negros, mulatos y pardos deambulaban por montes y valles; Baltazar de Grado intentaba darles doctrina cristiana."],
+      ["1635 / 1638", "Hallazgo de la imagen", "La tradición sitúa la aparición de la Virgen de los Ángeles en los ejidos de la capital, en La Gotera."],
+      ["1639", "Templo inicial", "Se comenzó a construir un templo con limosnas vinculadas a labores de milpa y chácaras."],
+      ["1650", "Asentamiento impulsado", "Juan Fernández de Salinas y de la Cerda dispuso asentar a población negra, mulata y parda dispersa en La Gotera."],
+      ["1653", "Cofradía", "Se fundó la cofradía de la Virgen de los Ángeles, institución que adquirió relevancia económica y religiosa."],
+      ["1676", "Demandas ante el cabildo", "Vecinos de la Puebla plantearon demandas de continuidad, representación y exoneración del pago de terrazgo."],
+      ["1782", "Patronazgo", "La Virgen de los Ángeles fue declarada patrona de Costa Rica."]
+    ];
+
+    const questionBank = [
+      {
+        q: "¿Quién es la autora del documento La Puebla de los Pardos en el siglo XVII?",
+        options: ["Rina Cáceres Gómez", "Juana Pereira", "Elizet Payne", "Marcela Otárola-Guevara"],
+        answer: 0,
+        why: "La ficha bibliográfica del artículo identifica como autora a Rina Cáceres Gómez."
+      },
+      {
+        q: "¿Dónde se fue concentrando la población negra, mulata y parda mencionada en el artículo?",
+        options: ["En La Gotera, al este de Cartago", "En Ujarrás, al oeste de Cartago", "En Matina, junto al cacaotal", "En Barba, junto al templo principal"],
+        answer: 0,
+        why: "El artículo ubica la concentración en los ejidos al este de Cartago, en el paraje llamado La Gotera."
+      },
+      {
+        q: "Según el texto, ¿qué dificultaba dar doctrina cristiana a negros, mulatos y pardos hacia 1629?",
+        options: ["La dispersión por montes y valles", "La falta de templos de piedra", "La ausencia de sacerdotes españoles", "La prohibición absoluta de cofradías"],
+        answer: 0,
+        why: "La dispersión hacía imposible la doctrina regular, por lo que se impulsaron esfuerzos para concentrar a la población."
+      },
+      {
+        q: "¿Qué nombre se asocia tradicionalmente con la mujer parda que halló la imagen de la Virgen de los Ángeles?",
+        options: ["Juana Pereira", "Eugenia Gertrudis de Abarca", "Nicolasa Zapata", "Isabel Jiménez"],
+        answer: 0,
+        why: "El texto señala que Monseñor Sanabria propuso el nombre Juana Pereira como hipótesis histórica."
+      },
+      {
+        q: "¿Qué gobernador dispuso asentar a la población negra, mulata y parda dispersa en La Gotera?",
+        options: ["Juan Fernández de Salinas y de la Cerda", "Baltazar de Grado", "Alonso Sánchez", "Álvaro de Guevara"],
+        answer: 0,
+        why: "En diciembre de 1650, el gobernador Juan Fernández de Salinas y de la Cerda impulsó ese asentamiento."
+      },
+      {
+        q: "¿Qué institución religiosa se fundó en 1653?",
+        options: ["La cofradía de la Virgen de los Ángeles", "El cabildo de justicia de Cartago", "La primera escuela de artesanos", "La compañía de dragones pardos"],
+        answer: 0,
+        why: "El documento indica que en 1653 se fundó la cofradía de la Virgen de los Ángeles."
+      },
+      {
+        q: "En 1676, ¿ante cuál instancia presentaron demandas los vecinos de la Puebla?",
+        options: ["El cabildo de la ciudad de Cartago", "La Audiencia de Guatemala", "La cofradía de Ujarrás", "El obispado de León"],
+        answer: 0,
+        why: "El artículo describe la sesión del cabildo de Cartago del 1 de enero de 1676."
+      },
+      {
+        q: "¿Cuál fue una de las demandas centrales planteadas por los vecinos en 1676?",
+        options: ["Tener representación y nombramientos propios", "Trasladarse obligatoriamente a Nicoya", "Eliminar las milicias de la Puebla", "Prohibir los oficios artesanales"],
+        answer: 0,
+        why: "Entre sus demandas estaban la representación y el nombramiento de cabildos de justicia y regimientos de policía."
+      },
+      {
+        q: "¿Qué ruta de formación artesanal menciona el documento?",
+        options: ["Aprendiz, oficial y maestro", "Soldado, alférez y capitán", "Peón, capellán y escribano", "Devoto, mayordomo y prior"],
+        answer: 0,
+        why: "La autora explica que el maestro era el puesto superior después de pasar por aprendiz y oficial."
+      },
+      {
+        q: "¿Cuál es una idea central del artículo?",
+        options: ["La población afrodescendiente participó activamente en la vida urbana de Cartago", "La Puebla estuvo aislada de toda actividad económica", "Los pardos no tuvieron participación religiosa", "Cartago no tuvo población negra durante el siglo XVII"],
+        answer: 0,
+        why: "El artículo muestra participación en religión, milicias, oficios, servicios, crédito y organización comunitaria."
+      },
+      {
+        q: "¿Qué publicación recoge el artículo de Rina Cáceres Gómez?",
+        options: ["Revista de Historia", "Anales de Cartago", "Boletín de Matemática Regional", "Archivo Nacional Escolar"],
+        answer: 0,
+        why: "La referencia bibliográfica corresponde a Revista de Historia, número 34, publicada en 1996."
+      },
+      {
+        q: "¿Qué tipo de fuentes ayudan a sostener el análisis del documento?",
+        options: ["Protocolos, padrones y actas de cabildo", "Novelas costumbristas del siglo XIX", "Mapas turísticos contemporáneos", "Registros deportivos coloniales"],
+        answer: 0,
+        why: "La autora reconstruye prácticas sociales a partir de documentos coloniales como protocolos, padrones y acuerdos de cabildo."
+      },
+      {
+        q: "¿Qué revela la participación en crédito y comercio?",
+        options: ["Que existían márgenes de acción económica aun dentro de jerarquías coloniales", "Que no había economía en Cartago", "Que solo los españoles podían endeudarse", "Que los esclavizados no aparecían en documentos"],
+        answer: 0,
+        why: "El documento muestra deudas, compras, pagos y servicios donde participaron distintos sectores afrodescendientes."
+      },
+      {
+        q: "¿Qué dimensión del documento se observa en los contratos de niñas menores de 13 años?",
+        options: ["La relación entre género, pobreza y servicio", "La fundación de la Universidad Nacional", "La independencia de Costa Rica", "La producción cafetalera del siglo XIX"],
+        answer: 0,
+        why: "Los contratos de servicio permiten ver desigualdades de género, edad y condición social."
+      },
+      {
+        q: "¿Qué papel tuvieron las festividades religiosas en la Puebla?",
+        options: ["Articularon devoción, comunidad, cargos y celebraciones", "Sustituyeron todos los trabajos artesanales", "Prohibieron la participación parda", "Eliminaron el cabildo de Cartago"],
+        answer: 0,
+        why: "Las fiestas de la Virgen de los Ángeles reunían organización comunitaria, celebración y responsabilidades religiosas."
+      },
+      {
+        q: "¿Por qué Cartago pudo mostrar mayor flexibilidad en algunos oficios?",
+        options: ["Por su economía más modesta y necesidades prácticas de organización colonial", "Porque no existían castas en América colonial", "Porque Guatemala dependía de Cartago", "Porque no había población indígena"],
+        answer: 0,
+        why: "La autora sugiere que la modestia de la ciudad y la urgencia de funciones básicas pudieron dar más peso al factor económico."
+      },
+      {
+        q: "¿Qué significa que la Puebla no sea solo periferia en la lectura del artículo?",
+        options: ["Que fue también espacio de organización, trabajo, reclamo y memoria", "Que era el centro administrativo del imperio", "Que no tenía relación con Cartago", "Que solo existía como leyenda religiosa"],
+        answer: 0,
+        why: "El artículo presenta la Puebla como un espacio social activo dentro de la historia urbana colonial."
+      },
+      {
+        q: "¿Cuál de estos elementos contribuyó a hacer efectiva la formación de la Puebla?",
+        options: ["La adscripción a milicias y el otorgamiento de solares", "La abolición de toda autoridad colonial", "La llegada del ferrocarril", "La creación de partidos políticos"],
+        answer: 0,
+        why: "El documento relaciona milicias y solares con la consolidación práctica del asentamiento."
+      },
+      {
+        q: "¿Qué lectura hace el documento sobre la cofradía cuando los mayordomos españoles pierden interés?",
+        options: ["Que los hermanos pardos asumieron responsabilidad práctica", "Que desapareció de inmediato", "Que se trasladó a Nicaragua", "Que dejó de tener vínculo con la Virgen"],
+        answer: 0,
+        why: "La pobreza de la ermita y la cofradía favoreció que los pardos asumieran responsabilidades en ese espacio."
+      },
+      {
+        q: "¿Qué muestra la demanda de 1676 sobre los vecinos de la Puebla?",
+        options: ["Capacidad de organización y negociación ante el cabildo", "Desinterés por el territorio", "Rechazo absoluto a vivir juntos", "Ausencia de cualquier vínculo con Cartago"],
+        answer: 0,
+        why: "Las demandas evidencian agencia colectiva y búsqueda de reconocimiento institucional."
+      },
+      {
+        q: "¿Qué dato aparece sobre la visita del obispo Valtonado en 1625?",
+        options: ["Se confirmaron 685 personas, entre ellas 65 negros y mulatos", "Se fundó la cofradía", "Se declaró patrona a la Virgen", "Se eliminó el cabildo"],
+        answer: 0,
+        why: "El texto menciona 685 confirmados y 65 personas negras y mulatas, libres y esclavas."
+      },
+      {
+        q: "¿Qué sector de la ciudad menciona el artículo como espacio inicial de la Puebla?",
+        options: ["Los ejidos de la capital", "El puerto de Puntarenas", "El valle de El Guarco indígena exclusivamente", "La plaza mayor de Guatemala"],
+        answer: 0,
+        why: "La Puebla se vincula con los ejidos de Cartago, particularmente con La Gotera."
+      },
+      {
+        q: "¿Qué relación establece el texto entre religión y formación comunitaria?",
+        options: ["El culto y la cofradía ayudaron a articular comunidad", "La religión impidió toda organización local", "La cofradía fue ajena a la Puebla", "La Virgen de los Ángeles solo aparece en el siglo XIX"],
+        answer: 0,
+        why: "El documento vincula culto, cofradía, fiestas y responsabilidad parda con la formación social de la Puebla."
+      },
+      {
+        q: "¿Qué tipo de pago aparece asociado a algunos servicios?",
+        options: ["Comida, techo, vestido y en ocasiones jornal", "Pago exclusivo en café", "Salario mensual bancario", "Títulos universitarios"],
+        answer: 0,
+        why: "Los contratos podían compensarse con manutención y, según el caso, con jornal o pago anual."
+      },
+      {
+        q: "¿Qué muestra el caso de los maestros artesanos en Cartago?",
+        options: ["La importancia de la población negra, mulata y mestiza en oficios", "La ausencia de cualquier aprendizaje", "La prohibición total de talleres", "La llegada de fábricas industriales"],
+        answer: 0,
+        why: "La autora menciona maestros y talleres que recibieron aprendices mulatos, negros y pardos."
+      },
+      {
+        q: "¿Cuál era una función del cabildo en la historia de la Puebla?",
+        options: ["Responder a solicitudes de asentamiento, solares y autoridades", "Redactar únicamente relatos religiosos", "Dirigir universidades", "Administrar ferrocarriles"],
+        answer: 0,
+        why: "El cabildo aparece como instancia que responde a las demandas de 1676 sobre poblamiento, representación y solares."
+      },
+      {
+        q: "¿Qué idea sobre las castas problematiza el documento?",
+        options: ["Que las jerarquías existían, pero no impedían toda participación social", "Que las castas no existieron en la colonia", "Que todos tenían igualdad política plena", "Que Cartago estaba fuera del sistema colonial"],
+        answer: 0,
+        why: "El artículo muestra límites coloniales, pero también participación económica, laboral, religiosa y militar."
+      },
+      {
+        q: "¿Qué aporta el artículo a la historia afrodescendiente costarricense?",
+        options: ["Visibiliza sujetos y prácticas presentes en archivos coloniales", "Niega la presencia afrodescendiente", "Estudia únicamente el café del siglo XIX", "Sustituye la historia por ficción"],
+        answer: 0,
+        why: "La autora reconstruye presencia afrodescendiente a partir de evidencia documental colonial."
+      },
+      {
+        q: "¿Qué actividad económica se menciona alrededor del templo inicial de 1639?",
+        options: ["Milpas de maíz y chácaras", "Exportación masiva de banano", "Minería industrial de oro", "Producción de software"],
+        answer: 0,
+        why: "El texto indica que las limosnas para el templo estaban ligadas a labores de milpa de maíz y chácaras."
+      },
+      {
+        q: "¿Qué permite comprender el estudio de La Puebla de los Pardos?",
+        options: ["La relación entre espacio, casta, trabajo, religión y poder local", "La geografía física sin población", "La historia militar europea", "La matemática financiera moderna"],
+        answer: 0,
+        why: "El documento enlaza poblamiento, jerarquía social, oficios, cofradía, milicias, cabildo y economía cotidiana."
+      }
+    ];
+
+    let questions = [];
+
+    function shuffleItems(items) {
+      return [...items].sort(() => Math.random() - 0.5);
+    }
+
+    function buildQuestionSet() {
+      questions = shuffleItems(questionBank).slice(0, 5).map(item => {
+        const options = item.options.map((text, index) => ({ text, correct: index === item.answer }));
+        const shuffledOptions = shuffleItems(options);
+        return {
+          ...item,
+          options: shuffledOptions.map(option => option.text),
+          answer: shuffledOptions.findIndex(option => option.correct)
+        };
+      });
+    }
+
+    let activeTopic = topics[0].id;
+    let qIndex = 0;
+    let score = 0;
+    let answered = false;
+    let quizFinished = false;
+
+    const $ = (selector) => document.querySelector(selector);
+    const $$ = (selector) => [...document.querySelectorAll(selector)];
+
+    function renderCards() {
+      $("#cards").innerHTML = topics.slice(0, 6).map(topic => `
+        <article class="info-card" data-open-topic="${topic.id}">
+          <span class="kicker">${topic.tag}</span>
+          <div>
+            <h3>${topic.title}</h3>
+            <p>${topic.text}</p>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function renderTopicList(filter = "") {
+      $("#topicList").innerHTML = topics.map(topic => `
+        <button class="topic-btn ${topic.id === activeTopic ? "active" : ""}" data-topic="${topic.id}">
+          <strong>${topic.title}</strong><br>
+          <span>${topic.tag}</span>
+        </button>
+      `).join("");
+    }
+
+    function renderTopic() {
+      const topic = topics.find(item => item.id === activeTopic) || topics[0];
+      $("#readerContent").innerHTML = `
+        <span class="kicker">${topic.tag}</span>
+        <h3>${topic.title}</h3>
+        <p>${topic.text}</p>
+        <div class="reader-actions">
+          <button class="btn" id="readTopicBtn" type="button">Leer esta ficha</button>
+          <button class="btn secondary" id="stopReadBtn" type="button">Detener lectura</button>
+        </div>
+        <div class="detail-list">
+          ${(topic.detail || []).map(item => `<p>${item}</p>`).join("")}
+        </div>
+        <div class="fact-row">
+          ${topic.facts.map(([label, value]) => `<div class="fact"><strong>${value}</strong><span>${label}</span></div>`).join("")}
+        </div>
+      `;
+      renderTopicList();
+    }
+
+    function renderTimeline() {
+      $("#timeline").innerHTML = timelineItems.map(([year, title, text]) => `
+        <article class="event">
+          <div class="year">${year}</div>
+          <div>
+            <h3>${title}</h3>
+            <p>${text}</p>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function setTab(id) {
+      $$("section").forEach(section => section.classList.toggle("active", section.id === id));
+      $$(".tab").forEach(tab => tab.classList.toggle("active", tab.dataset.tab === id));
+      window.scrollTo({ top: document.querySelector("nav").offsetTop, behavior: "smooth" });
+    }
+
+    function updateScore() {
+      $("#score").textContent = score;
+      $("#navScore").textContent = score;
+      const answeredCount = questions.slice(0, qIndex).length + (answered ? 1 : 0);
+      $("#progressBar").style.width = `${Math.min(100, (answeredCount / questions.length) * 100)}%`;
+      $("#scoreNote").textContent = score === 0
+        ? "Aún no hay respuestas correctas registradas."
+        : `${score / 10} acierto(s) acumulado(s).`;
+    }
+
+    function renderQuestion() {
+      const item = questions[qIndex];
+      quizFinished = false;
+      answered = false;
+      $("#questionCount").textContent = `Pregunta ${qIndex + 1} de ${questions.length}`;
+      $("#questionText").textContent = item.q;
+      $("#feedback").textContent = "Selecciona una respuesta para ver la retroalimentación.";
+      $("#options").innerHTML = item.options.map((option, index) => `
+        <button class="option" data-option="${index}">${option}</button>
+      `).join("");
+      $("#nextBtn").textContent = qIndex === questions.length - 1 ? "Ver resultado" : "Siguiente";
+      updateScore();
+    }
+
+    function resetQuiz() {
+      buildQuestionSet();
+      qIndex = 0;
+      score = 0;
+      answered = false;
+      quizFinished = false;
+      renderQuestion();
+    }
+
+    function finishQuiz() {
+      quizFinished = true;
+      const max = questions.length * 10;
+      const percent = Math.round((score / max) * 100);
+      $("#questionCount").textContent = "Resultado final";
+      $("#questionText").textContent = percent >= 80 ? "Dominio sólido del documento" : percent >= 50 ? "Buen avance, conviene repasar algunos ejes" : "Repasa las fichas y vuelve a intentarlo";
+      $("#options").innerHTML = "";
+      $("#feedback").innerHTML = `Obtuviste <strong>${score} de ${max} puntos</strong>. Tu porcentaje de acierto fue <strong>${percent}%</strong>.`;
+      $("#nextBtn").textContent = "Reiniciar reto";
+      $("#progressBar").style.width = "100%";
+    }
+
+    function speakCurrentTopic() {
+      if (!("speechSynthesis" in window)) {
+        $("#feedback") && ($("#feedback").textContent = "Este navegador no tiene lectura en voz alta disponible.");
+        return;
+      }
+      const readButton = $("#readTopicBtn");
+      const stopButton = $("#stopReadBtn");
+      readButton?.classList.add("is-reading");
+      stopButton?.classList.remove("is-stopping");
+      const topic = topics.find(item => item.id === activeTopic) || topics[0];
+      const text = [
+        topic.title,
+        topic.text,
+        ...(topic.detail || []),
+        ...topic.facts.map(([label, value]) => `${label}: ${value}`)
+      ].join(". ");
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "es-CR";
+      utterance.rate = 0.92;
+      utterance.pitch = 0.95;
+      utterance.onend = () => {
+        readButton?.classList.remove("is-reading");
+      };
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function stopReading() {
+      if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+      $("#readTopicBtn")?.classList.remove("is-reading");
+      $("#stopReadBtn")?.classList.add("is-stopping");
+    }
+
+    function applyTheme(theme) {
+      document.documentElement.dataset.theme = theme;
+      localStorage.setItem("puebla-theme", theme);
+      $("#themeBtn").textContent = theme === "dark" ? "Claro" : "Oscuro";
+      $("#themeBtn").setAttribute("aria-label", theme === "dark" ? "Cambiar a tema claro" : "Cambiar a tema oscuro");
+    }
+
+    document.addEventListener("click", (event) => {
+      const tab = event.target.closest("[data-tab]");
+      if (tab) setTab(tab.dataset.tab);
+
+      const go = event.target.closest("[data-go]");
+      if (go) setTab(go.dataset.go);
+
+      const openTopic = event.target.closest("[data-open-topic]");
+      if (openTopic) {
+        activeTopic = openTopic.dataset.openTopic;
+        renderTopic();
+        setTab("lector");
+      }
+
+      const topicBtn = event.target.closest("[data-topic]");
+      if (topicBtn) {
+        activeTopic = topicBtn.dataset.topic;
+        if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+        renderTopic();
+      }
+
+      if (event.target.closest("#readTopicBtn")) speakCurrentTopic();
+
+      if (event.target.closest("#stopReadBtn")) stopReading();
+
+      const option = event.target.closest("[data-option]");
+      if (option && !answered) {
+        answered = true;
+        const choice = Number(option.dataset.option);
+        const item = questions[qIndex];
+        $$(".option").forEach((btn, index) => {
+          btn.classList.toggle("correct", index === item.answer);
+          btn.classList.toggle("incorrect", index === choice && choice !== item.answer);
+        });
+        if (choice === item.answer) {
+          score += 10;
+          $("#feedback").innerHTML = `<strong>Correcto.</strong> ${item.why}`;
+        } else {
+          $("#feedback").innerHTML = `<strong>Revisa la idea.</strong> ${item.why}`;
+        }
+        updateScore();
+      }
+    });
+
+    $("#themeBtn").addEventListener("click", () => {
+      const current = document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+      applyTheme(current === "dark" ? "light" : "dark");
+    });
+
+    $("#nextBtn").addEventListener("click", () => {
+      if (quizFinished) {
+        resetQuiz();
+        return;
+      }
+      if (qIndex >= questions.length - 1 && !answered) {
+        finishQuiz();
+        return;
+      }
+      if (qIndex >= questions.length - 1) {
+        finishQuiz();
+        return;
+      }
+      qIndex += 1;
+      renderQuestion();
+    });
+
+    $("#restartBtn").addEventListener("click", () => {
+      resetQuiz();
+    });
+
+    applyTheme(localStorage.getItem("puebla-theme") || "light");
+    renderCards();
+    renderTopicList();
+    renderTopic();
+    renderTimeline();
+    resetQuiz();
+  </script>
+</body>
+</html>
