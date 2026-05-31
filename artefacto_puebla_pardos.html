@@ -95,11 +95,12 @@
 
     h1 {
       margin: 22px 0 16px;
-      max-width: 780px;
+      max-width: 100%;
       font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(24px, 3.5vw, 52px);
+      font-size: clamp(24px, 3.35vw, 48px);
       line-height: .93;
       letter-spacing: 0;
+      white-space: nowrap;
     }
 
     .lead {
@@ -156,7 +157,14 @@
     }
 
     [data-theme="dark"] .btn.secondary {
-      background: rgba(243, 234, 220, .08);
+      color: var(--ink);
+      background: rgba(243, 234, 220, .14);
+      border-color: rgba(243, 234, 220, .34);
+    }
+
+    [data-theme="dark"] .btn.secondary:hover {
+      background: rgba(243, 234, 220, .22);
+      border-color: rgba(243, 234, 220, .48);
     }
 
     .document-card {
@@ -176,6 +184,16 @@
     [data-theme="dark"] .reader-panel,
     [data-theme="dark"] .source-card {
       background: rgba(33, 29, 24, .82);
+    }
+
+    [data-theme="dark"] .document-card,
+    [data-theme="dark"] .info-card,
+    [data-theme="dark"] .question-panel,
+    [data-theme="dark"] .timeline,
+    [data-theme="dark"] .reader-panel,
+    [data-theme="dark"] .source-card,
+    [data-theme="dark"] .pdf-controls {
+      color: var(--ink);
     }
 
     .hero-side {
@@ -334,20 +352,6 @@
       box-shadow: 0 12px 24px rgba(23, 77, 75, .18), inset 0 1px 0 rgba(255, 255, 255, .18);
     }
 
-    .score-pill {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      min-width: max-content;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 8px 12px;
-      background: rgba(255, 253, 248, .7);
-      color: var(--muted);
-    }
-
-    .score-pill strong { color: var(--ink); }
-
     .nav-tools {
       display: flex;
       align-items: center;
@@ -375,9 +379,20 @@
       border-color: rgba(184, 138, 56, .5);
     }
 
-    [data-theme="dark"] .icon-btn,
-    [data-theme="dark"] .score-pill {
-      background: rgba(243, 234, 220, .08);
+    [data-theme="dark"] .icon-btn {
+      color: #f3eadc;
+      background: rgba(243, 234, 220, .1);
+      border-color: rgba(243, 234, 220, .3);
+    }
+
+    [data-theme="dark"] .tab {
+      color: #d7caba;
+    }
+
+    [data-theme="dark"] .tab:hover,
+    [data-theme="dark"] .tab.active {
+      color: #171411;
+      background: #f3eadc;
     }
 
     main { padding: 52px 0 86px; }
@@ -459,6 +474,14 @@
       transition: transform .24s cubic-bezier(.16, 1, .3, 1), border-color .24s ease, background .24s ease, box-shadow .24s ease;
     }
 
+    .info-card.is-playing {
+      border-color: rgba(28, 124, 84, .54);
+      box-shadow:
+        0 14px 24px rgba(28, 124, 84, .12),
+        inset 0 1px 0 rgba(255, 255, 255, .9),
+        inset 0 -2px 0 rgba(28, 124, 84, .2);
+    }
+
     .info-card::after {
       content: "";
       position: absolute;
@@ -480,6 +503,22 @@
         0 4px 8px rgba(46, 33, 20, .07),
         inset 0 1px 0 rgba(255, 255, 255, .92),
         inset 0 -1px 0 rgba(46, 33, 20, .06);
+    }
+
+    [data-theme="dark"] .info-card {
+      background:
+        linear-gradient(180deg, rgba(243, 234, 220, .1), rgba(243, 234, 220, .04)),
+        rgba(33, 29, 24, .9);
+      box-shadow:
+        0 12px 22px rgba(0, 0, 0, .2),
+        inset 0 1px 0 rgba(243, 234, 220, .08);
+    }
+
+    [data-theme="dark"] .info-card:hover,
+    [data-theme="dark"] .info-card.active {
+      background:
+        linear-gradient(180deg, rgba(243, 234, 220, .14), rgba(243, 234, 220, .06)),
+        rgba(43, 37, 31, .95);
     }
 
     .info-card.active {
@@ -505,7 +544,7 @@
       color: var(--accent);
       text-transform: uppercase;
       letter-spacing: .08em;
-      font-size: 12px;
+      font-size: 18px;
       font-weight: 700;
     }
 
@@ -528,6 +567,79 @@
       letter-spacing: 0;
     }
 
+    .audio-card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 14px;
+    }
+
+    .mini-audio-btn {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      min-height: 28px;
+      padding: 0 10px;
+      color: var(--ink);
+      background: rgba(255, 253, 248, .72);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1;
+      transition: transform .2s cubic-bezier(.16, 1, .3, 1), border-color .2s ease, background .2s ease, color .2s ease;
+    }
+
+    .mini-audio-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(184, 138, 56, .5);
+      background: var(--paper);
+    }
+
+    .mini-audio-btn:active {
+      transform: translateY(0) scale(.98);
+    }
+
+    .mini-audio-btn.play {
+      color: var(--paper);
+      background: var(--ink);
+      border-color: var(--ink);
+    }
+
+    [data-theme="dark"] .mini-audio-btn.play {
+      color: #171411;
+      background: #f3eadc;
+      border-color: #f3eadc;
+    }
+
+    .mini-audio-btn.stop {
+      color: #fffdf8;
+      background: var(--bad);
+      border-color: var(--bad);
+    }
+
+    .mini-audio-btn[disabled] {
+      cursor: default;
+      opacity: .82;
+      transform: none;
+    }
+
+    [data-theme="dark"] .mini-audio-btn {
+      color: #f3eadc;
+      background: rgba(243, 234, 220, .1);
+      border-color: rgba(243, 234, 220, .32);
+    }
+
+    [data-theme="dark"] .mini-audio-btn:hover {
+      color: #171411;
+      background: #f3eadc;
+      border-color: #f3eadc;
+    }
+
+    [data-theme="dark"] .mini-audio-btn.stop {
+      color: #fffdf8;
+      background: #e07a7d;
+      border-color: #e07a7d;
+    }
+
     .info-card p {
       margin: 0;
       color: var(--muted);
@@ -540,6 +652,367 @@
 
     .panorama-reader[hidden] {
       display: none;
+    }
+
+    .matching-game {
+      margin-top: 22px;
+      padding: 22px;
+      animation: rise .28s ease both;
+    }
+
+    .matching-game[hidden] {
+      display: none;
+    }
+
+    .word-search-game {
+      margin-top: 22px;
+      padding: 22px;
+      animation: rise .28s ease both;
+    }
+
+    .word-search-game[hidden] {
+      display: none;
+    }
+
+    .matching-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .matching-head h3 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.1;
+    }
+
+    .matching-head p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      max-width: 62ch;
+    }
+
+    .matching-board {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .word-search-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 230px;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .word-grid {
+      display: grid;
+      grid-template-columns: repeat(14, minmax(0, 1fr));
+      gap: 3px;
+      width: min(100%, 540px);
+      max-width: 540px;
+      user-select: none;
+      touch-action: none;
+    }
+
+    .word-cell {
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(110, 103, 93, .28);
+      border-radius: 8px;
+      color: var(--ink);
+      background: rgba(255, 253, 248, .78);
+      cursor: pointer;
+      font-size: clamp(11px, 1.2vw, 16px);
+      font-weight: 900;
+      line-height: 1;
+      transition: background .16s ease, border-color .16s ease, color .16s ease, transform .16s ease;
+    }
+
+    .word-cell:hover {
+      border-color: rgba(184, 138, 56, .58);
+      transform: translateY(-1px);
+    }
+
+    .word-cell.selecting,
+    .word-cell.found {
+      color: #2b2110;
+      border-color: rgba(215, 173, 99, .95);
+      background: #f2c35b;
+    }
+
+    .word-cell.found {
+      cursor: default;
+      transform: none;
+    }
+
+    [data-theme="dark"] .word-cell {
+      color: #fffdf8;
+      border-color: rgba(243, 234, 220, .24);
+      background: #332c24;
+    }
+
+    [data-theme="dark"] .word-cell:hover {
+      border-color: rgba(242, 195, 91, .82);
+    }
+
+    [data-theme="dark"] .word-cell.selecting,
+    [data-theme="dark"] .word-cell.found {
+      color: #2b2110;
+      border-color: rgba(242, 195, 91, .95);
+      background: #f2c35b;
+    }
+
+    .word-list {
+      display: grid;
+      gap: 6px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .word-list li {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 8px 10px;
+      color: var(--ink);
+      background: rgba(255, 253, 248, .64);
+      font-size: 14px;
+      font-weight: 850;
+    }
+
+    .word-list li.found {
+      border-color: rgba(215, 173, 99, .9);
+      background: rgba(242, 195, 91, .28);
+      text-decoration: line-through;
+    }
+
+    [data-theme="dark"] .word-list li {
+      color: #fffdf8;
+      border-color: rgba(243, 234, 220, .24);
+      background: #332c24;
+    }
+
+    [data-theme="dark"] .word-list li.found {
+      color: #fffdf8;
+      border-color: rgba(242, 195, 91, .9);
+      background: rgba(242, 195, 91, .22);
+    }
+
+    .match-column {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .match-stack {
+      display: grid;
+      grid-template-rows: repeat(4, minmax(62px, auto));
+      gap: 8px;
+    }
+
+    .match-column-title {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    [data-theme="dark"] .match-column-title {
+      color: #fffdf8;
+    }
+
+    .match-target {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 6px;
+      min-height: 62px;
+      padding: 9px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255, 253, 248, .5);
+      transition: border-color .2s ease, background .2s ease, transform .2s ease;
+    }
+
+    .match-target.drag-over {
+      transform: translateY(-2px);
+      border-color: rgba(184, 138, 56, .7);
+      background: rgba(184, 138, 56, .08);
+    }
+
+    [data-theme="dark"] .match-target {
+      color: #f3eadc;
+      border-color: rgba(243, 234, 220, .24);
+      background:
+        linear-gradient(145deg, rgba(243, 234, 220, .11), rgba(243, 234, 220, .05)),
+        #332c24;
+    }
+
+    [data-theme="dark"] .match-target.drag-over {
+      border-color: rgba(215, 173, 99, .68);
+      background:
+        linear-gradient(145deg, rgba(243, 234, 220, .16), rgba(243, 234, 220, .07)),
+        #3d352c;
+    }
+
+    .match-term {
+      font-weight: 900;
+      line-height: 1.22;
+      min-height: 24px;
+      display: flex;
+      align-items: center;
+      font-size: 18px;
+    }
+
+    [data-theme="dark"] .match-term {
+      color: #fffdf8;
+    }
+
+    .match-slot {
+      min-height: 34px;
+      display: grid;
+      align-items: center;
+      border: 1px dashed rgba(110, 103, 93, .45);
+      border-radius: 12px;
+      padding: 7px;
+      color: var(--muted);
+      background: rgba(255, 253, 248, .55);
+      font-size: 14px;
+      line-height: 1.22;
+    }
+
+    [data-theme="dark"] .match-slot {
+      color: #fffdf8;
+      border-color: rgba(242, 195, 91, .35);
+      background: rgba(242, 195, 91, .08);
+    }
+
+    .match-pool {
+      display: grid;
+      grid-template-rows: repeat(4, minmax(62px, auto));
+      gap: 8px;
+      padding: 0;
+      border: 1px dashed rgba(110, 103, 93, .38);
+      border-radius: 8px;
+      background: transparent;
+      border: 0;
+    }
+
+    .match-pool:empty {
+      display: none;
+    }
+
+    .match-button {
+      justify-self: center;
+      width: min(94%, 760px);
+      min-height: 62px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 9px 10px;
+      text-align: left;
+      color: var(--ink);
+      background: var(--paper);
+      box-shadow: none;
+      cursor: grab;
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 1.24;
+      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+
+    [data-theme="dark"] .match-button {
+      color: #fffdf8;
+      border-color: rgba(242, 195, 91, .48);
+      background:
+        linear-gradient(145deg, rgba(242, 195, 91, .16), rgba(243, 234, 220, .06)),
+        #332c24;
+      box-shadow: 0 10px 18px rgba(0, 0, 0, .28);
+    }
+
+    .match-button:hover,
+    .match-button.selected {
+      transform: translateY(-2px);
+      border-color: rgba(184, 138, 56, .56);
+      box-shadow: 0 12px 22px rgba(46, 33, 20, .1);
+    }
+
+    [data-theme="dark"] .match-button:hover,
+    [data-theme="dark"] .match-button.selected {
+      color: #fffdf8;
+      border-color: rgba(242, 195, 91, .82);
+      background:
+        linear-gradient(145deg, rgba(242, 195, 91, .22), rgba(243, 234, 220, .08)),
+        #3d352c;
+      box-shadow: 0 12px 22px rgba(0, 0, 0, .32);
+    }
+
+    .match-button:active {
+      cursor: grabbing;
+      transform: translateY(0) scale(.99);
+    }
+
+    .match-button.placed {
+      min-height: 34px;
+      width: 100%;
+      box-shadow: none;
+      font-size: 15px;
+      padding: 6px 7px;
+    }
+
+    .match-target.correct {
+      border-color: rgba(215, 173, 99, .86);
+      background: rgba(242, 195, 91, .22);
+      box-shadow: inset 0 0 0 1px rgba(215, 173, 99, .2);
+    }
+
+    .match-target.incorrect {
+      border-color: rgba(190, 38, 48, .9);
+      background: rgba(190, 38, 48, .18);
+      box-shadow: inset 0 0 0 1px rgba(190, 38, 48, .18);
+    }
+
+    .match-target.correct .match-button.placed {
+      color: #2b2110;
+      border-color: rgba(215, 173, 99, .95);
+      background: rgba(242, 195, 91, .5);
+    }
+
+    .match-target.incorrect .match-button.placed {
+      color: #fffdf8;
+      border-color: rgba(190, 38, 48, .95);
+      background: #b92630;
+    }
+
+    [data-theme="dark"] .match-target.correct {
+      border-color: rgba(242, 195, 91, .9);
+      background:
+        linear-gradient(145deg, rgba(242, 195, 91, .32), rgba(242, 195, 91, .16)),
+        #3d352c;
+    }
+
+    [data-theme="dark"] .match-target.incorrect {
+      border-color: rgba(255, 92, 102, .95);
+      background:
+        linear-gradient(145deg, rgba(210, 47, 58, .42), rgba(210, 47, 58, .2)),
+        #4a2425;
+    }
+
+    [data-theme="dark"] .match-target.correct .match-button.placed {
+      color: #fffdf8;
+      border-color: rgba(242, 195, 91, .95);
+      background: rgba(242, 195, 91, .28);
+    }
+
+    [data-theme="dark"] .match-target.incorrect .match-button.placed {
+      color: #fffdf8;
+      border-color: rgba(255, 92, 102, .95);
+      background: #b92630;
     }
 
     .reader-layout {
@@ -679,6 +1152,31 @@
       transform: translateY(-3px);
     }
 
+    [data-theme="dark"] .event {
+      color: #f3eadc;
+      border-color: rgba(243, 234, 220, .24);
+      background:
+        linear-gradient(145deg, rgba(243, 234, 220, .11), rgba(243, 234, 220, .05)),
+        #211d18;
+      box-shadow:
+        0 16px 28px rgba(0, 0, 0, .28),
+        0 4px 0 rgba(0, 0, 0, .2),
+        inset 0 1px 0 rgba(243, 234, 220, .08);
+    }
+
+    [data-theme="dark"] .event:hover,
+    [data-theme="dark"] .event.active {
+      color: #f3eadc;
+      border-color: rgba(215, 173, 99, .68);
+      background:
+        linear-gradient(145deg, rgba(243, 234, 220, .16), rgba(243, 234, 220, .07)),
+        #2b251f;
+      box-shadow:
+        0 20px 34px rgba(0, 0, 0, .36),
+        0 5px 0 rgba(215, 173, 99, .2),
+        inset 0 1px 0 rgba(243, 234, 220, .1);
+    }
+
     .event:active {
       transform: translateY(1px);
       box-shadow:
@@ -693,6 +1191,10 @@
       color: var(--accent);
     }
 
+    [data-theme="dark"] .year {
+      color: #d7ad63;
+    }
+
     .event h3 {
       margin: 0 0 6px;
       font-size: 18px;
@@ -705,9 +1207,21 @@
       font-size: 14px;
     }
 
+    [data-theme="dark"] .event h3 {
+      color: #f3eadc;
+    }
+
+    [data-theme="dark"] .event p {
+      color: #d7caba;
+    }
+
     .timeline-reader {
       margin-top: 18px;
       animation: rise .28s ease both;
+    }
+
+    .timeline-reader .reader-content {
+      min-height: 0;
     }
 
     .timeline-reader h3 {
@@ -761,7 +1275,15 @@
     [data-theme="dark"] .option,
     [data-theme="dark"] .topic-btn.active,
     [data-theme="dark"] .topic-btn:hover {
+      color: #f3eadc;
       background: rgba(243, 234, 220, .07);
+      border-color: rgba(243, 234, 220, .26);
+    }
+
+    [data-theme="dark"] .option:hover {
+      color: #171411;
+      background: #f3eadc;
+      border-color: #f3eadc;
     }
 
     .option:hover { transform: translateY(-2px); }
@@ -814,6 +1336,166 @@
       transition: width .2s ease;
     }
 
+    .pdf-reader {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 220px;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .pdf-frame-wrap {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .pdf-page-image {
+      display: block;
+      width: 100%;
+      border: 0;
+      background: var(--paper);
+    }
+
+    .pdf-controls {
+      position: sticky;
+      top: 92px;
+      display: grid;
+      gap: 12px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 253, 248, .78);
+      box-shadow: 0 16px 40px rgba(46, 33, 20, .08);
+    }
+
+    [data-theme="dark"] .pdf-controls {
+      background: rgba(33, 29, 24, .82);
+    }
+
+    .page-count {
+      display: grid;
+      gap: 4px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .page-count span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .page-count strong {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 38px;
+      line-height: .95;
+      color: var(--accent);
+    }
+
+    .pdf-page-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .pdf-nav-btn {
+      display: inline-grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, .82), rgba(255, 253, 248, .58)),
+        var(--paper);
+      box-shadow:
+        0 8px 18px rgba(46, 33, 20, .08),
+        inset 0 1px 0 rgba(255, 255, 255, .85);
+      cursor: pointer;
+      font-size: 24px;
+      line-height: 1;
+      transition: transform .2s cubic-bezier(.16, 1, .3, 1), border-color .2s ease, background .2s ease, color .2s ease, box-shadow .2s ease;
+    }
+
+    [data-theme="dark"] .pdf-nav-btn {
+      color: #f3eadc;
+      background:
+        linear-gradient(180deg, rgba(243, 234, 220, .14), rgba(243, 234, 220, .07)),
+        #211d18;
+      border-color: rgba(243, 234, 220, .34);
+      box-shadow:
+        0 10px 20px rgba(0, 0, 0, .28),
+        inset 0 1px 0 rgba(243, 234, 220, .1);
+    }
+
+    [data-theme="dark"] .pdf-nav-btn:hover {
+      color: #171411;
+      background: #f3eadc;
+      border-color: #f3eadc;
+    }
+
+    .pdf-nav-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(184, 138, 56, .5);
+      box-shadow:
+        0 12px 24px rgba(46, 33, 20, .12),
+        inset 0 1px 0 rgba(255, 255, 255, .9);
+    }
+
+    .pdf-nav-btn:active {
+      transform: translateY(0) scale(.97);
+    }
+
+    .pdf-page-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      max-height: 250px;
+      overflow: auto;
+      padding-right: 2px;
+    }
+
+    .page-chip {
+      display: inline-grid;
+      place-items: center;
+      min-height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: var(--paper);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 800;
+      text-decoration: none;
+      transition: transform .18s ease, border-color .18s ease, color .18s ease, background .18s ease;
+    }
+
+    [data-theme="dark"] .page-chip {
+      color: #f3eadc;
+      background: rgba(243, 234, 220, .08);
+      border-color: rgba(243, 234, 220, .3);
+    }
+
+    .page-chip:hover,
+    .page-chip.active {
+      transform: translateY(-1px);
+      color: var(--paper);
+      border-color: var(--accent);
+      background: var(--accent);
+    }
+
+    [data-theme="dark"] .page-chip:hover,
+    [data-theme="dark"] .page-chip.active {
+      color: #171411;
+      border-color: #d7ad63;
+      background: #d7ad63;
+    }
+
     .result-actions {
       display: flex;
       gap: 10px;
@@ -843,8 +1525,33 @@
     }
 
     @media (max-width: 860px) {
-      .hero, .hero-side, .section-head, .reader-layout, .quiz-grid, .sources {
+      .hero, .hero-side, .section-head, .reader-layout, .quiz-grid, .sources, .pdf-reader {
         grid-template-columns: 1fr;
+      }
+
+      h1 {
+        white-space: normal;
+      }
+
+      .matching-head,
+      .matching-board,
+      .word-search-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .matching-head {
+        display: grid;
+      }
+
+      .word-grid {
+        width: min(100%, 480px);
+        max-width: 480px;
+        gap: 2px;
+      }
+
+      .word-cell {
+        border-radius: 6px;
+        font-size: clamp(10px, 2.6vw, 14px);
       }
 
       .info-grid, .fact-row {
@@ -855,10 +1562,6 @@
         align-items: stretch;
         flex-direction: column;
         padding: 10px 0;
-      }
-
-      .score-pill {
-        justify-content: center;
       }
 
       .nav-tools {
@@ -873,11 +1576,73 @@
       .section-head {
         align-items: start;
       }
+
+      .pdf-controls {
+        position: static;
+      }
+
+    }
+
+    @media (max-width: 1120px) and (min-width: 861px) {
+      .matching-game {
+        padding: 18px;
+      }
+
+      .word-search-layout {
+        grid-template-columns: minmax(0, 1fr) 210px;
+      }
+
+      .word-grid {
+        width: min(100%, 500px);
+        max-width: 500px;
+      }
+
+      .match-target,
+      .match-button {
+        min-height: 60px;
+      }
+
+      .match-stack,
+      .match-pool {
+        grid-template-rows: repeat(4, minmax(60px, auto));
+      }
+
+      .match-button {
+        font-size: 15px;
+      }
     }
 
     @media (max-width: 520px) {
       .shell {
         width: min(100% - 22px, 1180px);
+      }
+
+      .word-search-game {
+        padding: 14px;
+      }
+
+      .word-search-layout {
+        gap: 12px;
+      }
+
+      .word-grid {
+        width: min(100%, calc(100vw - 50px));
+        max-width: 360px;
+        gap: 1px;
+      }
+
+      .word-cell {
+        border-radius: 4px;
+        font-size: clamp(9px, 2.4vw, 12px);
+      }
+
+      .word-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .word-list li {
+        padding: 7px 8px;
+        font-size: 12px;
       }
 
       header {
@@ -1001,11 +1766,11 @@
       <div class="tabs" role="tablist" aria-label="Secciones del artefacto">
         <button class="tab active" data-tab="panorama">Panorama</button>
         <button class="tab" data-tab="linea">Línea de tiempo</button>
+        <button class="tab" data-tab="paginas">Revista de Historia</button>
         <button class="tab" data-tab="creditos">Créditos</button>
       </div>
       <div class="nav-tools">
         <button class="icon-btn" id="themeBtn" type="button" aria-label="Cambiar tema">Oscuro</button>
-        <div class="score-pill">Puntos: <strong id="navScore">0</strong></div>
       </div>
     </div>
   </nav>
@@ -1014,13 +1779,55 @@
     <section id="panorama" class="active">
       <div class="section-head">
         <div class="section-title-row">
-          <h2>Ideas para entrar al texto</h2>
+          <h2>Secciones del texto</h2>
           <button class="btn" type="button" data-start-panorama-challenge>Reto</button>
+          <button class="btn secondary" type="button" data-open-matching>Asocie</button>
+          <button class="btn secondary" type="button" data-open-word-search>Sopa de letras</button>
         </div>
-        <p>El artículo explica cómo las poblaciones negras, mulatas y pardas participaron en la vida urbana, religiosa, laboral, militar y económica de Cartago, capital colonial de Costa Rica.</p>
+        <p>Escucha las secciones breves del texto y luego resuelve el reto de comprensión.</p>
       </div>
 
       <div class="info-grid" id="cards"></div>
+
+      <div class="matching-game question-panel" id="matchingGame" hidden>
+        <div class="matching-head">
+          <div>
+            <h3>Asocie</h3>
+            <p>Relaciona cada concepto con la idea que mejor lo explica dentro del texto.</p>
+          </div>
+          <div class="reader-actions">
+            <button class="btn secondary" type="button" data-new-matching>Nuevo asocie</button>
+            <button class="btn secondary" type="button" data-close-matching>Cerrar</button>
+          </div>
+        </div>
+        <div class="matching-board" id="matchingBoard"></div>
+        <div class="reader-actions">
+          <button class="btn" type="button" data-check-matching>Revisar</button>
+          <button class="btn secondary" type="button" data-reset-matching>Reiniciar este</button>
+        </div>
+        <p class="reader-status" id="matchingStatus" aria-live="polite">Selecciona una opción para cada concepto.</p>
+      </div>
+
+      <div class="word-search-game question-panel" id="wordSearchGame" hidden>
+        <div class="matching-head">
+          <div>
+            <h3>Sopa de letras</h3>
+            <p>Selecciona las letras con el mouse hasta formar cada palabra.</p>
+          </div>
+          <div class="reader-actions">
+            <button class="btn secondary" type="button" data-reset-word-search>Reiniciar sopa</button>
+            <button class="btn secondary" type="button" data-close-word-search>Cerrar</button>
+          </div>
+        </div>
+        <div class="word-search-layout">
+          <div class="word-grid" id="wordGrid" aria-label="Sopa de letras"></div>
+          <div>
+            <p class="match-column-title">Palabras</p>
+            <ul class="word-list" id="wordList"></ul>
+          </div>
+        </div>
+        <p class="reader-status" id="wordSearchStatus" aria-live="polite">Encuentra las cinco palabras.</p>
+      </div>
 
       <div class="panorama-reader" id="panoramaReader" hidden>
         <article class="reader-panel reader-content" id="readerContent"></article>
@@ -1040,8 +1847,8 @@
 
     <section id="reto">
       <div class="section-head">
-        <h2 id="quizTitle">Reto de comprensión</h2>
-        <p id="quizIntro">Responde cinco preguntas seleccionadas al azar del banco del documento. Cada acierto suma 10 puntos; el sistema muestra avance y resultado final.</p>
+        <h2 id="quizTitle">Reto de secciones del texto</h2>
+        <p id="quizIntro">Responde cinco preguntas seleccionadas al azar sobre la materia del texto. Cada acierto suma 10 puntos; el sistema muestra avance y resultado final.</p>
       </div>
 
       <div class="quiz-grid">
@@ -1064,6 +1871,32 @@
           <span class="big" id="score">0</span>
           <p id="scoreNote">Aún no hay respuestas registradas.</p>
           <div class="progress" aria-label="Progreso del reto"><span id="progressBar"></span></div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="paginas">
+      <div class="section-head">
+        <h2>Revista de Historia</h2>
+        <p>Consulta el PDF mejorado desde el artefacto con navegación directa por página.</p>
+      </div>
+
+      <div class="pdf-reader">
+        <div class="pdf-frame-wrap">
+          <img class="pdf-page-image" id="pdfPageImage" src="revista_historia_pages/page_01.png" alt="Página 01 de la Revista de Historia">
+        </div>
+
+        <aside class="pdf-controls" aria-label="Controles de páginas del PDF">
+          <div class="page-count">
+            <span>Página actual</span>
+            <strong id="pdfPageLabel">01 / 28</strong>
+          </div>
+          <div class="pdf-page-buttons">
+            <button class="pdf-nav-btn" type="button" data-pdf-prev aria-label="Página anterior">‹</button>
+            <button class="pdf-nav-btn" type="button" data-pdf-next aria-label="Página siguiente">›</button>
+          </div>
+          <div class="pdf-page-grid" id="pdfPageGrid" aria-label="Elegir página"></div>
+          <a class="btn secondary" href="La_Puebla_de_los_Pardos_en_el_siglo_XVII.pdf" target="_blank" rel="noopener">Abrir PDF</a>
         </aside>
       </div>
     </section>
@@ -1094,147 +1927,88 @@
   <script>
     const topics = [
       {
-        id: "origen",
-        tag: "Contexto",
-        title: "Cartago y La Gotera",
-        text: "El documento ubica el proceso fuera del casco de la ciudad de Cartago, capital colonial de Costa Rica. En los ejidos al este, en el paraje llamado La Gotera, se concentraron poco a poco pardos, mulatos y negros libres.",
-        facts: [["Lugar", "La Gotera"], ["Ciudad", "Cartago"], ["Siglo", "XVII"]],
-        detail: [
-          "La ubicacion fuera del casco urbano muestra una politica colonial de separacion espacial, pero tambien un proceso de formacion comunitaria.",
-          "El articulo presenta La Gotera como un punto donde confluyen desplazamientos, doctrina religiosa, milicias y acceso a solares."
-        ]
+        id: "siglo-xvi",
+        tag: "Hoja 1",
+        title: "Siglo XVI",
+        audio: "Audios del texto_La_Puebla_de_los_Pardos_en_el_siglo_XVII/hoja1_LA PUEBLA DE LOS PARDOS EN EL SIGLO XVI.mp3"
       },
       {
-        id: "poblacion",
-        tag: "Población",
-        title: "Negros, mulatos y pardos",
-        text: "La autora analiza cómo estos grupos no fueron marginales a la vida urbana: participaron en ámbitos religiosos, económicos, laborales, militares y de organización comunitaria.",
-        facts: [["Eje", "Vida urbana"], ["Grupos", "Negros, mulatos y pardos"], ["Enfoque", "Participación social"]],
-        detail: [
-          "La lectura rompe la idea de una poblacion solamente subordinada: muestra actores que negocian, trabajan, sirven militarmente y sostienen instituciones.",
-          "La categoria pardo aparece asociada a una realidad social compleja de castas, oficios, vecindad y participacion urbana."
-        ]
+        id: "leyenda",
+        tag: "Hoja 2",
+        title: "La leyenda",
+        audio: "Audios del texto_La_Puebla_de_los_Pardos_en_el_siglo_XVII/hoja2_La Virgen de los Ángeles su leyenda.mp3"
       },
       {
-        id: "virgen",
-        tag: "Religión",
-        title: "La Virgen de los Ángeles",
-        text: "El artículo vincula la tradición del hallazgo de la imagen con una mujer parda llamada Juana Pereira, nombre planteado por Monseñor Sanabria como hipótesis histórica. También destaca el crecimiento posterior del culto.",
-        facts: [["Tradición", "Juana Pereira"], ["Lugar", "La Gotera"], ["Patronazgo", "1782"]],
-        detail: [
-          "El texto distingue entre tradicion religiosa e hipotesis historica: el nombre Juana Pereira se mantiene mientras no exista documentacion que lo sustituya.",
-          "El culto, inicialmente modesto, se enlaza con la organizacion de la Puebla y con la presencia de poblacion parda en responsabilidades religiosas."
-        ]
+        id: "imagen",
+        tag: "Hoja 3",
+        title: "La imagen",
+        audio: "Audios del texto_La_Puebla_de_los_Pardos_en_el_siglo_XVII/hoja3_La imagen de la Virgen de los Ángeles.mp3"
       },
       {
-        id: "cofradia",
-        tag: "Organización",
-        title: "Cofradía y responsabilidad parda",
-        text: "La cofradía de la Virgen de los Ángeles se fundó en 1653. Con el tiempo, la responsabilidad práctica quedó en manos de hermanos pardos, en un marco de participación relativamente independiente.",
-        facts: [["Año", "1653"], ["Institución", "Cofradía"], ["Rol", "Hermanos pardos"]],
-        detail: [
-          "La cofradia sirvio como espacio de sociabilidad, fiesta, administracion de recursos y afirmacion comunitaria.",
-          "La autora senala que la ermita y la cofradia fueron pobres en el siglo XVII, lo que contribuyo a que los mayordomos espanoles perdieran interes y los pardos asumieran mas responsabilidad."
-        ]
+        id: "milicias-1",
+        tag: "Hoja 4",
+        title: "Milicias I",
+        audio: "Audios del texto_La_Puebla_de_los_Pardos_en_el_siglo_XVII/hoja4_Las milicias de negros, mulatos y pardos.mp3"
       },
       {
-        id: "milicias",
-        tag: "Milicias",
-        title: "Servicio militar y solares",
-        text: "Juan Fernández de Salinas y de la Cerda impulsó la organización de milicias de negros, mulatos y pardos. La adscripción militar y la asignación de solares ayudaron a hacer efectiva la Puebla.",
-        facts: [["Gobernador", "Fernández de Salinas"], ["Función", "Milicias"], ["Base", "Solares"]],
-        detail: [
-          "Las milicias aparecen como un mecanismo de control colonial, pero tambien como una via de reconocimiento funcional para la poblacion de la Puebla.",
-          "La formacion del asentamiento no dependio solo de la religion: tambien se sostuvo en obligaciones militares y en la organizacion territorial."
-        ]
+        id: "milicias-2",
+        tag: "Hoja 5",
+        title: "Milicias II",
+        audio: "Audios del texto_La_Puebla_de_los_Pardos_en_el_siglo_XVII/hoja5_Las milicias de negros, mulatos y pardos.mp3"
       },
       {
-        id: "cabildo",
-        tag: "Derechos",
-        title: "Demandas de 1676",
-        text: "El 1 de enero de 1676, vecinos mulatos, negros libres y mestizos bajos plantearon demandas al cabildo: continuar la fundación, tener representación y nombramientos propios, y solicitar exoneración del terrazgo de ejidos.",
-        facts: [["Año", "1676"], ["Demandas", "3"], ["Instancia", "Cabildo"]],
-        detail: [
-          "La peticion de 1676 es clave porque muestra agencia colectiva: los vecinos no aparecen solo como poblacion asentada, sino como grupo que solicita condiciones politicas y fiscales.",
-          "El cabildo concedio formar poblado, repartir solares y nombrar autoridades internas, bajo supervision colonial."
-        ]
+        id: "milicias-3",
+        tag: "Hoja 6",
+        title: "Milicias III",
+        audio: "Audios del texto_La_Puebla_de_los_Pardos_en_el_siglo_XVII/hoja6_Las milicias de negros, mulatos y pardos.mp3"
+      },
+      {
+        id: "milicias-4",
+        tag: "Hoja 7",
+        title: "Milicias IV",
+        audio: "Audios del texto_La_Puebla_de_los_Pardos_en_el_siglo_XVII/hoja7_Las milicias de negros, mulatos y pardos.mp3"
+      },
+      {
+        id: "puebla",
+        tag: "Hoja 8",
+        title: "La Puebla",
+        audio: "Audios del texto_La_Puebla_de_los_Pardos_en_el_siglo_XVII/hoja8_La Puebla de los Pardos.mp3"
+      },
+      {
+        id: "asentamiento",
+        tag: "Hoja 9",
+        title: "Asentar población",
+        audio: "Audios del texto_La_Puebla_de_los_Pardos_en_el_siglo_XVII/hoja9_La Puebla de los Pardos_el proceso de asentar a la población afro mestiza fue lento.mp3"
+      },
+      {
+        id: "puebla-1707",
+        tag: "Hoja 10",
+        title: "Puebla 1707",
+        audio: "Audios del texto_La_Puebla_de_los_Pardos_en_el_siglo_XVII/hoja10_La Puebla de los Pardos_1707.mp3"
+      },
+      {
+        id: "siglo-xviii",
+        tag: "Hoja 11",
+        title: "Inicios XVIII",
+        audio: "Audios del texto_La_Puebla_de_los_Pardos_en_el_siglo_XVII/hoja11_La Puebla de los Pardos_1707_inicios del siglo XVIII.mp3"
       },
       {
         id: "oficios",
-        tag: "Trabajo",
-        title: "Artes, oficios y aprendizaje",
-        text: "El texto muestra que la población negra, mulata y mestiza desempeñó un papel importante en la actividad artesanal de Cartago. La ruta de formación podía ir de aprendiz a oficial y luego a maestro.",
-        facts: [["Ruta", "Aprendiz-oficial-maestro"], ["Actividad", "Artes y oficios"], ["Ciudad", "Cartago"]],
-        detail: [
-          "En comparacion con ciudades mayores como Mexico o Guatemala, Cartago tuvo una estructura mas modesta, lo que pudo flexibilizar barreras de casta en algunos oficios.",
-          "La presencia de maestros y aprendices evidencia participacion economica concreta, no solo registro demografico."
-        ]
+        tag: "Hoja 12",
+        title: "Oficios",
+        audio: "Audios del texto_La_Puebla_de_los_Pardos_en_el_siglo_XVII/hoja12_De oficios, servidumbre y trabajo.mp3"
       },
       {
-        id: "servicios",
-        tag: "Economía",
-        title: "Servicios y contratos",
-        text: "Los contratos de servicio podían implicar permanencia en la casa del patrón, comida, vestido y a veces jornal. El documento distingue servicios pagados anualmente y servidumbre compensada con techo, comida y vestido.",
-        facts: [["Modalidad", "Contratos"], ["Pago", "Anual o manutención"], ["Caso", "Lorenzo de Ocampo"]],
-        detail: [
-          "Algunos contratos eran prolongados y podian durar hasta el matrimonio, especialmente en el caso de ninas menores vinculadas a familias pobres.",
-          "El caso de Lorenzo de Ocampo muestra servicio por dos anos y pago pactado, con obligaciones de buen tratamiento."
-        ]
+        id: "servicio",
+        tag: "Hoja 13",
+        title: "Trabajo doméstico",
+        audio: "Audios del texto_La_Puebla_de_los_Pardos_en_el_siglo_XVII/hoja13_El trabajo doméstico y la prestación de servicios.mp3"
       },
       {
-        id: "credito",
-        tag: "Transacciones",
-        title: "Crédito y comercio",
-        text: "Cáceres muestra que la población afrodescendiente participó en transacciones crediticias. Incluso personas esclavizadas podían figurar en relaciones de deuda o pago gracias a su trabajo o habilidad económica.",
-        facts: [["Tema", "Crédito"], ["Evidencia", "Protocolos"], ["Lectura", "Participación económica"]],
-        detail: [
-          "Los protocolos de Cartago muestran compras a credito, deudas, servicios y pagos a plazo en los que participaron mulatos, pardos, negros libres y esclavizados.",
-          "La autora subraya que, a pesar de la casta, la economia cotidiana abria espacios de negociacion y circulacion."
-        ]
-      },
-      {
-        id: "fuentes",
-        tag: "Método histórico",
-        title: "Protocolos, padrones y cabildo",
-        text: "El argumento se apoya en documentos coloniales: protocolos, cabildos, padrones y referencias historiográficas. Esas fuentes permiten reconstruir prácticas sociales que no siempre aparecen en relatos oficiales.",
-        facts: [["Fuentes", "Protocolos"], ["Lectura", "Archivo colonial"], ["Uso", "Evidencia social"]],
-        detail: [
-          "La autora cruza registros de confirmaciones, testamentos, contratos, ordenanzas, deudas y acuerdos de cabildo.",
-          "El valor del documento esta en volver visibles sujetos historicos que muchas veces aparecen dispersos en archivos administrativos."
-        ]
-      },
-      {
-        id: "fiestas",
-        tag: "Cultura",
-        title: "Fiestas y vida comunitaria",
-        text: "Las festividades de la Virgen de los Ángeles incluían organización, celebraciones, faroles, cantos, fandangos y actividades en torno al santuario.",
-        facts: [["Fecha", "2 de agosto"], ["Duración", "Quince días"], ["Espacio", "Santuario"]],
-        detail: [
-          "La fiesta religiosa funciona como expresion de comunidad y como escenario de participacion parda.",
-          "La celebracion no era solo devocional: articulaba economia, prestigio, cargos y redes sociales."
-        ]
-      },
-      {
-        id: "genero",
-        tag: "Género",
-        title: "Mujeres, niñas y servicio",
-        text: "El documento destaca que muchos contratos de servicio involucraban a niñas menores de 13 años, mulatas, pardas y negras, procedentes de familias pobres de La Gotera.",
-        facts: [["Grupo", "Niñas menores"], ["Edad", "Menores de 13"], ["Condición", "Familias pobres"]],
-        detail: [
-          "La dimension de genero permite observar desigualdades mas profundas dentro de la poblacion colonial.",
-          "Los contratos muestran mecanismos de dependencia, manutencion y trabajo que afectaban especialmente a mujeres y menores."
-        ]
-      },
-      {
-        id: "tesis",
-        tag: "Tesis",
-        title: "Una lectura de agencia",
-        text: "La tesis fuerte del artículo es que la población negra, mulata y parda participó en todos los órdenes de la vida urbana de Cartago, aunque bajo jerarquías coloniales.",
-        facts: [["Idea", "Agencia"], ["Marco", "Jerarquía colonial"], ["Resultado", "Participación urbana"]],
-        detail: [
-          "La Puebla de los Pardos no se entiende solo como periferia: tambien fue un espacio de organizacion, reclamo, trabajo y memoria.",
-          "El documento ayuda a discutir como se construyo la presencia afrodescendiente en la historia colonial costarricense."
-        ]
+        id: "economia",
+        tag: "Hoja 14",
+        title: "Economía cotidiana",
+        audio: "Audios del texto_La_Puebla_de_los_Pardos_en_el_siglo_XVII/hoja14_Otras actividades economicas.mp3"
       }
     ];
 
@@ -1397,7 +2171,95 @@
       }
     ];
 
-    const questionBank = [
+    const matchingSets = [
+      [
+        {
+          term: "La Puebla",
+          match: "Asentamiento y organización de población parda y afromestiza."
+        },
+        {
+          term: "La Gotera",
+          match: "Paraje al este de Cartago vinculado con la Puebla."
+        },
+        {
+          term: "Doctrina",
+          match: "Evangelización que se facilitaba al reunir población dispersa."
+        },
+        {
+          term: "Solares",
+          match: "Terrenos que ordenaban materialmente el asentamiento."
+        }
+      ],
+      [
+        {
+          term: "Virgen",
+          match: "Devoción que enlaza memoria local y presencia parda."
+        },
+        {
+          term: "Imagen",
+          match: "Objeto religioso asociado con la tradición del hallazgo."
+        },
+        {
+          term: "Cofradía",
+          match: "Organización religiosa de participación comunitaria."
+        },
+        {
+          term: "Fiestas",
+          match: "Celebraciones que articulaban devoción y comunidad."
+        }
+      ],
+      [
+        {
+          term: "Milicias",
+          match: "Servicio militar dentro del orden colonial."
+        },
+        {
+          term: "Oficios",
+          match: "Trabajo aprendido como aprendiz, oficial y maestro."
+        },
+        {
+          term: "Servicio",
+          match: "Relación laboral con manutención, vestido o pago."
+        },
+        {
+          term: "Economía",
+          match: "Transacciones, deudas y trabajo cotidiano."
+        }
+      ],
+      [
+        {
+          term: "Cabildo",
+          match: "Instancia local ante la cual se hicieron solicitudes."
+        },
+        {
+          term: "Juana Pereira",
+          match: "Nombre tradicional ligado al hallazgo de la imagen."
+        },
+        {
+          term: "Agencia",
+          match: "Capacidad de actuar y negociar dentro de límites coloniales."
+        },
+        {
+          term: "Casta",
+          match: "Categoría social usada para ordenar jerarquías coloniales."
+        }
+      ]
+    ];
+
+    const wordSearchSize = 14;
+    const wordSearchWords = [
+      { label: "LA GOTERA", key: "LAGOTERA", row: 3, col: 1, dr: 1, dc: 0 },
+      { label: "PARDO", key: "PARDO", row: 13, col: 1, dr: 0, dc: 1 },
+      { label: "LA PUEBLA", key: "LAPUEBLA", row: 0, col: 5, dr: 0, dc: 1 },
+      { label: "CRUZ DE CARAVACA", key: "CRUZDECARAVACA", row: 0, col: 0, dr: 1, dc: 1 },
+      { label: "MILICIAS", key: "MILICIAS", row: 4, col: 13, dr: 1, dc: 0 }
+    ];
+    const wordSearchFill = "BCEFHIJKNQSTUVXYZ";
+    let wordSearchGrid = [];
+    let foundWordKeys = new Set();
+    let selectedWordCells = new Set();
+
+    const legacyQuestionBank = [
       {
         q: "¿Quién es la autora del documento La Puebla de los Pardos en el siglo XVII?",
         options: ["Rina Cáceres Gómez", "Juana Pereira", "Elizet Payne", "Marcela Otárola-Guevara"],
@@ -1580,10 +2442,253 @@
       }
     ];
 
+    const questionBank = [
+      {
+        q: "¿Qué población se estudia principalmente en La Puebla de los Pardos?",
+        options: ["Negros, mulatos, pardos y población afromestiza", "Cafetaleros del siglo XX", "Funcionarios republicanos", "Empresarios ferroviarios"],
+        answer: 0,
+        why: "El texto se centra en la presencia histórica de población negra, mulata, parda y afromestiza en Cartago colonial."
+      },
+      {
+        q: "¿Con qué devoción religiosa se relaciona la leyenda estudiada en el texto?",
+        options: ["La Virgen de los Ángeles", "La Virgen de Guadalupe", "San José Obrero", "Nuestra Señora de Ujarrás"],
+        answer: 0,
+        why: "La lectura vincula la Puebla con la tradición y el culto de la Virgen de los Ángeles."
+      },
+      {
+        q: "¿Qué aspecto de la Virgen de los Ángeles permite conectar religión e historia local?",
+        options: ["La imagen y su tradición de hallazgo", "La construcción de ferrocarriles", "La producción cafetalera", "La guerra contra los filibusteros"],
+        answer: 0,
+        why: "La imagen de la Virgen y su relato tradicional ayudan a relacionar devoción, memoria y presencia parda."
+      },
+      {
+        q: "¿Qué función cumplieron las milicias de negros, mulatos y pardos dentro del orden colonial?",
+        options: ["Servicio militar y organización de la población", "Administración de universidades", "Exportación de banano", "Redacción de periódicos republicanos"],
+        answer: 0,
+        why: "Las milicias aparecen como una forma de servicio y de organización bajo las autoridades coloniales."
+      },
+      {
+        q: "¿Por qué fue importante el proceso de asentar a la población afromestiza?",
+        options: ["Porque buscaba ordenar una población dispersa y formar comunidad", "Porque eliminó toda jerarquía colonial", "Porque fundó una capital nueva", "Porque trasladó la población a Puntarenas"],
+        answer: 0,
+        why: "El asentamiento fue lento y estuvo ligado a control, doctrina, solares y organización comunitaria."
+      },
+      {
+        q: "¿Qué idea expresa mejor el carácter lento del poblamiento de la Puebla?",
+        options: ["La formación del asentamiento fue gradual y requirió decisiones de autoridad", "La Puebla desapareció de inmediato", "El asentamiento ocurrió en un solo día", "La población nunca tuvo vínculo con Cartago"],
+        answer: 0,
+        why: "El texto muestra que la concentración y organización de la población no fue instantánea."
+      },
+      {
+        q: "¿Qué fecha permite observar la continuidad histórica de la Puebla después del siglo XVII?",
+        options: ["1707", "1821", "1948", "2026"],
+        answer: 0,
+        why: "La referencia a 1707 permite seguir el proceso hacia los inicios del siglo XVIII."
+      },
+      {
+        q: "¿Qué cambio temporal se estudia al pasar de 1707 a los inicios del siglo XVIII?",
+        options: ["La continuidad de la Puebla y sus dinámicas sociales", "La independencia de Costa Rica", "La abolición del ejército", "La llegada del café al mercado mundial"],
+        answer: 0,
+        why: "La sección de inicios del siglo XVIII mantiene la atención en la continuidad social e histórica de la Puebla."
+      },
+      {
+        q: "¿Qué ruta de aprendizaje aparece asociada a los oficios?",
+        options: ["Aprendiz, oficial y maestro", "Soldado, alférez y capitán", "Peón, capellán y escribano", "Devoto, mayordomo y prior"],
+        answer: 0,
+        why: "El texto explica el aprendizaje artesanal como un proceso que podía avanzar de aprendiz a oficial y maestro."
+      },
+      {
+        q: "¿Qué muestra el trabajo doméstico y la prestación de servicios?",
+        options: ["Relaciones de dependencia, manutención y servicio cotidiano", "La fundación de partidos políticos", "La actividad industrial moderna", "La desaparición de la vida urbana"],
+        answer: 0,
+        why: "Los contratos de servicio permiten ver vínculos laborales, comida, vestido, techo y obligaciones."
+      },
+      {
+        q: "¿Qué revelan las otras actividades económicas mencionadas en el texto?",
+        options: ["La participación de sectores afrodescendientes en la economía cotidiana", "La ausencia total de comercio", "La economía cafetalera del siglo XX", "La minería industrial moderna"],
+        answer: 0,
+        why: "La lectura muestra trabajo, servicios, transacciones y márgenes de acción económica."
+      },
+      {
+        q: "¿Cuál de estos temas pertenece a la primera parte histórica sobre la Puebla?",
+        options: ["La presencia de la Puebla de los Pardos en el siglo XVI", "La fundación de la Segunda República", "La industrialización del Valle Central", "El turismo de playa"],
+        answer: 0,
+        why: "El recorrido inicia con el contexto histórico temprano de La Puebla de los Pardos."
+      },
+      {
+        q: "¿Qué tema recibe especial desarrollo dentro del texto por su relación con la población parda?",
+        options: ["Las milicias", "El cultivo de banano", "La telefonía moderna", "La banca estatal"],
+        answer: 0,
+        why: "Las milicias de negros, mulatos y pardos son un eje importante para comprender servicio, control y organización."
+      },
+      {
+        q: "¿Qué dos ámbitos ayudan a comprender la vida laboral de la población estudiada?",
+        options: ["Oficios y trabajo doméstico", "Teatro y fotografía", "Ferrocarril y aviación", "Prensa y radio"],
+        answer: 0,
+        why: "Los oficios, la servidumbre y la prestación de servicios muestran la dimensión laboral de la Puebla."
+      },
+      {
+        q: "¿Qué permite comprender la referencia a 1707?",
+        options: ["La continuidad de la Puebla más allá de su formación inicial", "La independencia nacional", "La desaparición de la Virgen de los Ángeles", "La creación de una provincia nueva"],
+        answer: 0,
+        why: "La mención de 1707 ayuda a observar que el proceso histórico continuó hacia el siglo XVIII."
+      },
+      {
+        q: "¿Qué relación existe entre la leyenda y la imagen de la Virgen de los Ángeles?",
+        options: ["Ambas conectan devoción religiosa con memoria local", "Ambas explican la economía bananera", "Ambas tratan de la educación universitaria", "Ambas narran la independencia de Centroamérica"],
+        answer: 0,
+        why: "La leyenda y la imagen permiten estudiar cómo la devoción se enlaza con la historia de la Puebla."
+      },
+      {
+        q: "¿Qué papel tuvo Cartago en el contexto de La Puebla de los Pardos?",
+        options: ["Fue el espacio urbano colonial donde se articuló este proceso", "Fue un puerto bananero del Caribe", "Fue una capital republicana del siglo XX", "Fue una ciudad sin población afrodescendiente"],
+        answer: 0,
+        why: "La Puebla se entiende dentro del contexto de Cartago colonial y sus formas de organización social."
+      },
+      {
+        q: "¿Qué aspecto económico aparece junto al trabajo y los servicios?",
+        options: ["Otras actividades económicas y transacciones cotidianas", "La bolsa de valores moderna", "La exportación masiva de microchips", "El turismo internacional"],
+        answer: 0,
+        why: "El texto amplía la mirada laboral al incluir actividades económicas de la vida cotidiana."
+      },
+      {
+        q: "¿Qué idea general atraviesa el estudio de la Puebla?",
+        options: ["La población afrodescendiente tuvo presencia y participación social", "La Puebla fue ajena a Cartago", "No existieron jerarquías coloniales", "Solo se estudia una leyenda sin contexto histórico"],
+        answer: 0,
+        why: "La lectura muestra presencia, trabajo, organización, religiosidad y participación de población afrodescendiente."
+      },
+      {
+        q: "¿Qué permite observar el estudio de milicias, oficios y economía?",
+        options: ["Diversas formas de participación dentro de una sociedad jerarquizada", "La igualdad política plena de todos los grupos", "La falta total de documentación", "La vida urbana sin trabajo ni religión"],
+        answer: 0,
+        why: "Estos temas muestran participación social dentro de límites y jerarquías coloniales."
+      },
+      {
+        q: "¿Por qué la Puebla puede entenderse como un espacio de organización social?",
+        options: ["Porque reunió población, prácticas religiosas, trabajo y formas de autoridad local", "Porque funcionó como una fábrica moderna", "Porque fue una ciudad independiente de Costa Rica", "Porque no tuvo relación con la vida colonial"],
+        answer: 0,
+        why: "La Puebla concentró procesos de poblamiento, religión, milicias, trabajo y participación comunitaria."
+      },
+      {
+        q: "¿Qué relación había entre doctrina cristiana y asentamiento de población?",
+        options: ["La concentración de población facilitaba la evangelización y el control", "La doctrina impedía cualquier poblamiento", "La evangelización solo ocurrió en el siglo XX", "La doctrina no tenía relación con la colonia"],
+        answer: 0,
+        why: "Reunir a la población dispersa ayudaba a las autoridades a organizar la doctrina cristiana."
+      },
+      {
+        q: "¿Qué revela la presencia de población parda en torno a la Virgen de los Ángeles?",
+        options: ["Que la religiosidad también fue un espacio de memoria y participación afrodescendiente", "Que la devoción no tuvo actores sociales", "Que la Puebla estaba fuera de Cartago", "Que la imagen pertenece al periodo republicano reciente"],
+        answer: 0,
+        why: "El texto conecta devoción, tradición local y presencia parda en los ejidos de Cartago."
+      },
+      {
+        q: "¿Qué muestra la leyenda de la Virgen al ser leída históricamente?",
+        options: ["La relación entre tradición religiosa, identidad local y población parda", "La historia de la exportación cafetalera", "La creación del ferrocarril", "La fundación de universidades coloniales"],
+        answer: 0,
+        why: "La leyenda permite discutir cómo una tradición religiosa conserva huellas de actores sociales."
+      },
+      {
+        q: "¿Qué papel tuvo el servicio militar para negros, mulatos y pardos?",
+        options: ["Fue una obligación colonial y también una forma de reconocimiento funcional", "Fue una actividad sin relación con la Puebla", "Eliminó las jerarquías de casta", "Sustituyó todos los oficios artesanales"],
+        answer: 0,
+        why: "Las milicias combinaban control colonial, defensa local y organización de grupos de la Puebla."
+      },
+      {
+        q: "¿Qué indica que las milicias fueran de negros, mulatos y pardos?",
+        options: ["Que esos grupos participaban en tareas militares dentro del orden colonial", "Que no existía población afrodescendiente", "Que Cartago no tenía autoridades", "Que solo los españoles servían militarmente"],
+        answer: 0,
+        why: "El texto muestra la participación militar de poblaciones afrodescendientes y afromestizas."
+      },
+      {
+        q: "¿Por qué el asentamiento de la población afromestiza no puede verse como un hecho simple?",
+        options: ["Porque fue un proceso lento, con autoridades, solares, doctrina y demandas", "Porque ocurrió fuera de toda documentación", "Porque no involucró personas reales", "Porque terminó antes de empezar"],
+        answer: 0,
+        why: "El proceso de asentar población implicó varias dimensiones sociales y administrativas."
+      },
+      {
+        q: "¿Qué importancia tenían los solares en la formación de la Puebla?",
+        options: ["Ayudaban a materializar el asentamiento y ordenar el espacio", "Eran monedas usadas en el comercio", "Eran cargos de la cofradía", "Eran armas de las milicias"],
+        answer: 0,
+        why: "El reparto de solares hacía concreta la ubicación de familias y vecinos en el espacio colonial."
+      },
+      {
+        q: "¿Qué permite estudiar el paso hacia los inicios del siglo XVIII?",
+        options: ["La permanencia y transformación de la Puebla en el tiempo", "El inicio de la independencia centroamericana", "La llegada del turismo masivo", "La abolición del sistema colonial"],
+        answer: 0,
+        why: "La referencia a inicios del siglo XVIII amplía el proceso más allá de su formación inicial."
+      },
+      {
+        q: "¿Qué tipo de sociedad se observa en el estudio de la Puebla?",
+        options: ["Una sociedad colonial jerarquizada con espacios de participación", "Una sociedad sin diferencias sociales", "Una sociedad industrial contemporánea", "Una sociedad sin religión ni trabajo"],
+        answer: 0,
+        why: "El texto combina límites coloniales con evidencias de participación social, laboral y religiosa."
+      },
+      {
+        q: "¿Qué muestra la ruta de aprendiz a maestro?",
+        options: ["Una forma de formación laboral en los oficios", "Una carrera militar obligatoria", "Un proceso universitario moderno", "Una ceremonia religiosa anual"],
+        answer: 0,
+        why: "La ruta aprendiz, oficial y maestro describe la formación artesanal."
+      },
+      {
+        q: "¿Por qué los oficios son importantes para entender a la población estudiada?",
+        options: ["Porque muestran participación económica y laboral concreta", "Porque prueban que no trabajaban", "Porque sustituyen la religión", "Porque pertenecen solo al siglo XXI"],
+        answer: 0,
+        why: "Los oficios permiten ver a negros, mulatos y pardos como actores dentro de la economía urbana."
+      },
+      {
+        q: "¿Qué evidencia ofrecen los contratos de servicio?",
+        options: ["Relaciones laborales con obligaciones, pagos o manutención", "Elecciones democráticas modernas", "Tratados internacionales", "Registros deportivos"],
+        answer: 0,
+        why: "Los contratos muestran formas de trabajo, dependencia, manutención y acuerdos de servicio."
+      },
+      {
+        q: "¿Qué dimensión social se observa especialmente en el trabajo doméstico?",
+        options: ["Desigualdades de edad, género, pobreza y condición social", "Únicamente ceremonias militares", "La fundación de bancos", "La ausencia de familias"],
+        answer: 0,
+        why: "El trabajo doméstico permite observar desigualdades dentro de la vida cotidiana colonial."
+      },
+      {
+        q: "¿Qué revela la economía cotidiana sobre personas esclavizadas o libres?",
+        options: ["Que podían aparecer en relaciones de trabajo, deuda, pago o servicio", "Que nunca aparecen en documentos", "Que solo participaban en política moderna", "Que no tenían vínculo con Cartago"],
+        answer: 0,
+        why: "El texto muestra márgenes de acción económica aun dentro de jerarquías coloniales."
+      },
+      {
+        q: "¿Qué tipo de fuentes ayudan a reconstruir estas prácticas sociales?",
+        options: ["Documentos coloniales como protocolos, padrones y cabildos", "Fotografías digitales", "Redes sociales", "Periódicos deportivos"],
+        answer: 0,
+        why: "La autora reconstruye la vida social colonial mediante registros documentales."
+      },
+      {
+        q: "¿Qué significa hablar de agencia en el caso de la Puebla?",
+        options: ["Reconocer que sus habitantes actuaron, negociaron y participaron dentro de límites coloniales", "Afirmar que todos tenían igualdad plena", "Negar las jerarquías de casta", "Reducir la historia a una leyenda"],
+        answer: 0,
+        why: "La agencia permite ver acciones colectivas, trabajo, servicio militar, religiosidad y demandas."
+      },
+      {
+        q: "¿Qué relación se puede establecer entre milicias y formación territorial?",
+        options: ["Las milicias se vincularon con la organización de población y solares", "Las milicias eliminaron el asentamiento", "Las milicias eran fiestas religiosas", "Las milicias solo existieron en Europa"],
+        answer: 0,
+        why: "El texto relaciona servicio militar, poblamiento y organización espacial."
+      },
+      {
+        q: "¿Qué aporta el estudio de la Puebla a la historia de Costa Rica colonial?",
+        options: ["Visibiliza la presencia afrodescendiente en Cartago y sus formas de participación", "Demuestra que Cartago no tuvo población diversa", "Estudia solamente la independencia", "Sustituye el análisis histórico por ficción"],
+        answer: 0,
+        why: "La lectura ayuda a reconocer actores afrodescendientes en la historia colonial costarricense."
+      },
+      {
+        q: "¿Qué idea conecta religión, trabajo, milicias y economía en el texto?",
+        options: ["La población parda participó en varios ámbitos de la vida urbana colonial", "La Puebla fue un espacio vacío", "La vida colonial no tenía instituciones", "La economía no existía en Cartago"],
+        answer: 0,
+        why: "El conjunto de temas muestra participación múltiple en la vida social de Cartago."
+      }
+    ];
+
     let questions = [];
     let activeQuestionBank = questionBank;
-    let activeQuizTitle = "Reto de comprensión";
-    let activeQuizIntro = "Responde cinco preguntas seleccionadas al azar del banco del documento. Cada acierto suma 10 puntos; el sistema muestra avance y resultado final.";
+    let activeQuizTitle = "Reto de secciones del texto";
+    let activeQuizIntro = "Responde cinco preguntas seleccionadas al azar sobre la materia del texto. Cada acierto suma 10 puntos; el sistema muestra avance y resultado final.";
 
     function shuffleItems(items) {
       return [...items].sort(() => Math.random() - 0.5);
@@ -1607,23 +2712,233 @@
     let score = 0;
     let answered = false;
     let quizFinished = false;
-    let currentUtterance = null;
-    let speechChunks = [];
-    let speechIndex = 0;
-    let speechStopped = true;
+    let currentAudio = null;
+    let currentAudioTopic = null;
+    let selectedMatchButton = null;
+    let activeMatchingSet = 0;
+    const pdfPageTotal = 28;
+    let currentPdfPage = 1;
 
     const $ = (selector) => document.querySelector(selector);
     const $$ = (selector) => [...document.querySelectorAll(selector)];
 
+    function formatPageNumber(page) {
+      return String(page).padStart(2, "0");
+    }
+
+    function renderPdfPageGrid() {
+      $("#pdfPageGrid").innerHTML = Array.from({ length: pdfPageTotal }, (_, index) => {
+        const page = index + 1;
+        return `<button class="page-chip ${page === currentPdfPage ? "active" : ""}" type="button" data-pdf-page="${page}">${formatPageNumber(page)}</button>`;
+      }).join("");
+    }
+
+    function setPdfPage(page) {
+      currentPdfPage = Math.max(1, Math.min(pdfPageTotal, page));
+      $("#pdfPageLabel").textContent = `${formatPageNumber(currentPdfPage)} / ${formatPageNumber(pdfPageTotal)}`;
+      const image = $("#pdfPageImage");
+      image.src = `revista_historia_pages/page_${formatPageNumber(currentPdfPage)}.png`;
+      image.alt = `Página ${formatPageNumber(currentPdfPage)} de la Revista de Historia`;
+      renderPdfPageGrid();
+    }
+
     function renderCards() {
       $("#cards").innerHTML = topics.map(topic => `
-        <article class="info-card ${topic.id === activeTopic && !$("#panoramaReader").hidden ? "active" : ""}" data-open-topic="${topic.id}">
-          <span class="kicker">${topic.tag}</span>
+        <article class="info-card ${topic.id === currentAudioTopic ? "is-playing" : ""}" data-card-audio="${topic.id}">
           <div>
             <h3>${topic.title}</h3>
           </div>
+          <div class="audio-card-actions">
+            <button class="mini-audio-btn play" type="button" data-play-audio="${topic.id}">Activar audio</button>
+            <button class="mini-audio-btn stop" type="button" data-stop-audio="${topic.id}" ${topic.id === currentAudioTopic ? "" : "disabled"}>Detener audio</button>
+          </div>
         </article>
       `).join("");
+    }
+
+    function buildWordSearchGrid() {
+      const grid = Array.from({ length: wordSearchSize }, () => Array(wordSearchSize).fill(""));
+      let fillIndex = 0;
+      wordSearchWords.forEach(word => {
+        [...word.key].forEach((letter, index) => {
+          grid[word.row + word.dr * index][word.col + word.dc * index] = letter;
+        });
+      });
+      for (let row = 0; row < wordSearchSize; row += 1) {
+        for (let col = 0; col < wordSearchSize; col += 1) {
+          if (!grid[row][col]) {
+            grid[row][col] = wordSearchFill[fillIndex % wordSearchFill.length];
+            fillIndex += 1;
+          }
+        }
+      }
+      return grid;
+    }
+
+    function wordCellKey(row, col) {
+      return `${row}-${col}`;
+    }
+
+    function getWordPath(word) {
+      return [...word.key].map((_, index) => (
+        wordCellKey(word.row + word.dr * index, word.col + word.dc * index)
+      ));
+    }
+
+    function renderWordSearch() {
+      const foundCells = new Set();
+      wordSearchWords.forEach(word => {
+        if (!foundWordKeys.has(word.key)) return;
+        getWordPath(word).forEach(key => foundCells.add(key));
+      });
+      $("#wordGrid").innerHTML = wordSearchGrid.map((rowItems, row) => rowItems.map((letter, col) => {
+        const key = wordCellKey(row, col);
+        const state = foundCells.has(key) ? "found" : selectedWordCells.has(key) ? "selecting" : "";
+        return `<button class="word-cell ${state}" type="button" data-word-row="${row}" data-word-col="${col}" ${foundCells.has(key) ? "disabled" : ""}>${letter}</button>`;
+      }).join("")).join("");
+      $("#wordList").innerHTML = wordSearchWords.map(word => (
+        `<li class="${foundWordKeys.has(word.key) ? "found" : ""}">${word.label}</li>`
+      )).join("");
+      const remaining = wordSearchWords.length - foundWordKeys.size;
+      $("#wordSearchStatus").textContent = remaining === 0
+        ? "Sopa completa. Todas las palabras fueron encontradas."
+        : `Faltan ${remaining} palabra${remaining === 1 ? "" : "s"} por encontrar.`;
+      $("#wordSearchStatus").classList.toggle("active", remaining === 0);
+      $("#wordSearchStatus").classList.remove("stopped");
+    }
+
+    function resetWordSearch() {
+      wordSearchGrid = buildWordSearchGrid();
+      foundWordKeys = new Set();
+      selectedWordCells = new Set();
+      renderWordSearch();
+    }
+
+    function openWordSearchGame() {
+      stopTopicAudio();
+      $("#panoramaReader").hidden = true;
+      $("#matchingGame").hidden = true;
+      $("#wordSearchGame").hidden = false;
+      resetWordSearch();
+      renderCards();
+      setTab("panorama");
+      requestAnimationFrame(() => {
+        $("#wordSearchGame").scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+
+    function closeWordSearchGame() {
+      $("#wordSearchGame").hidden = true;
+      $("#cards").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function toggleWordCell(cell) {
+      if (!cell || cell.disabled || cell.classList.contains("found")) return;
+      const key = wordCellKey(Number(cell.dataset.wordRow), Number(cell.dataset.wordCol));
+      if (selectedWordCells.has(key)) {
+        selectedWordCells.delete(key);
+      } else {
+        selectedWordCells.add(key);
+      }
+      checkSelectedWord();
+      renderWordSearch();
+    }
+
+    function checkSelectedWord() {
+      const word = wordSearchWords.find(item => (
+        !foundWordKeys.has(item.key) && getWordPath(item).every(key => selectedWordCells.has(key))
+      ));
+      if (!word) return;
+      foundWordKeys.add(word.key);
+      getWordPath(word).forEach(key => selectedWordCells.delete(key));
+    }
+
+    function renderMatchingGame() {
+      const matchingItems = matchingSets[activeMatchingSet];
+      const options = shuffleItems(matchingItems.map(item => item.match));
+      selectedMatchButton = null;
+      $("#matchingBoard").innerHTML = `
+        <div class="match-column">
+          <p class="match-column-title">Conceptos</p>
+          <div class="match-stack">
+            ${matchingItems.map((item, index) => `
+            <div class="match-target" data-match-target="${index}" data-accept="${item.match}">
+              <div class="match-term">${item.term}</div>
+              <div class="match-slot" data-match-slot="${index}">Arrastra aquí una descripción.</div>
+            </div>
+            `).join("")}
+          </div>
+        </div>
+        <div class="match-column">
+          <p class="match-column-title">Descripciones</p>
+          <div class="match-pool" id="matchPool">
+            ${options.map((option, index) => `
+              <button class="match-button" type="button" draggable="true" data-match-value="${option}" id="matchOption${index}">${option}</button>
+            `).join("")}
+          </div>
+        </div>
+      `;
+      $("#matchingStatus").textContent = `Asocie ${activeMatchingSet + 1} de ${matchingSets.length}. Arrastra cada descripción hacia el concepto que corresponde.`;
+      $("#matchingStatus").classList.remove("active", "stopped");
+    }
+
+    function renderNextMatchingGame() {
+      activeMatchingSet = (activeMatchingSet + 1) % matchingSets.length;
+      renderMatchingGame();
+    }
+
+    function openMatchingGame() {
+      stopTopicAudio();
+      $("#panoramaReader").hidden = true;
+      $("#wordSearchGame").hidden = true;
+      $("#matchingGame").hidden = false;
+      renderCards();
+      renderMatchingGame();
+      setTab("panorama");
+      requestAnimationFrame(() => {
+        $("#matchingGame").scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+
+    function closeMatchingGame() {
+      $("#matchingGame").hidden = true;
+      $("#cards").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function checkMatchingGame() {
+      const matchingItems = matchingSets[activeMatchingSet];
+      let correct = 0;
+      matchingItems.forEach((item, index) => {
+        const target = document.querySelector(`[data-match-target="${index}"]`);
+        const placed = target.querySelector(".match-button");
+        const isCorrect = placed?.dataset.matchValue === item.match;
+        if (isCorrect) correct += 1;
+        target.classList.toggle("correct", isCorrect);
+        target.classList.toggle("incorrect", Boolean(placed) && !isCorrect);
+      });
+      const status = $("#matchingStatus");
+      status.textContent = `Resultado: ${correct} de ${matchingItems.length} asociaciones correctas.`;
+      status.classList.toggle("active", correct === matchingItems.length);
+      status.classList.toggle("stopped", correct < matchingItems.length);
+    }
+
+    function placeMatchButton(button, target) {
+      if (!button || !target) return;
+      const slot = target.querySelector(".match-slot");
+      const pool = $("#matchPool");
+      const previous = slot.querySelector(".match-button");
+      if (previous && previous !== button) {
+        previous.classList.remove("placed");
+        pool.appendChild(previous);
+      }
+      button.classList.remove("selected");
+      button.classList.add("placed");
+      slot.textContent = "";
+      slot.appendChild(button);
+      target.classList.remove("correct", "incorrect", "drag-over");
+      selectedMatchButton = null;
+      $("#matchingStatus").textContent = "Asociación colocada. Puedes moverla si necesitas cambiarla.";
+      $("#matchingStatus").classList.remove("active", "stopped");
     }
 
     function renderTopic() {
@@ -1631,18 +2946,10 @@
       $("#readerContent").innerHTML = `
         <span class="kicker">${topic.tag}</span>
         <h3>${topic.title}</h3>
-        <p>${topic.text}</p>
         <div class="reader-actions">
-          <button class="btn" id="readTopicBtn" type="button">Leer esta ficha</button>
-          <button class="btn secondary" id="stopReadBtn" type="button">Detener lectura</button>
+          <button class="btn" type="button" data-play-audio="${topic.id}">Activar audio</button>
+          <button class="btn secondary" type="button" data-stop-audio="${topic.id}">Detener audio</button>
           <button class="btn secondary" id="backToPanoramaBtn" type="button">Regresar</button>
-        </div>
-        <p class="reader-status" id="readerStatus" aria-live="polite">Lectura lista.</p>
-        <div class="detail-list">
-          ${(topic.detail || []).map(item => `<p>${item}</p>`).join("")}
-        </div>
-        <div class="fact-row">
-          ${topic.facts.map(([label, value]) => `<div class="fact"><strong>${value}</strong><span>${label}</span></div>`).join("")}
         </div>
       `;
     }
@@ -1668,9 +2975,6 @@
         <div class="detail-list">
           ${(item.detail || []).map(detail => `<p>${detail}</p>`).join("")}
         </div>
-        <div class="fact-row">
-          ${item.facts.map(([label, value]) => `<div class="fact"><strong>${value}</strong><span>${label}</span></div>`).join("")}
-        </div>
       `;
     }
 
@@ -1694,6 +2998,8 @@
 
     function openPanoramaReader(topicId) {
       activeTopic = topicId;
+      $("#matchingGame").hidden = true;
+      $("#wordSearchGame").hidden = true;
       renderTopic();
       $("#panoramaReader").hidden = false;
       renderCards();
@@ -1704,15 +3010,47 @@
     }
 
     function closePanoramaReader() {
-      stopReading();
+      stopTopicAudio();
       $("#panoramaReader").hidden = true;
       renderCards();
       $("#cards").scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
+    function stopTopicAudio(topicId = currentAudioTopic) {
+      if (!currentAudio || (topicId && topicId !== currentAudioTopic)) return;
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+      currentAudio = null;
+      currentAudioTopic = null;
+      renderCards();
+    }
+
+    function playTopicAudio(topicId) {
+      const topic = topics.find(item => item.id === topicId);
+      if (!topic) return;
+      if (currentAudio) stopTopicAudio();
+      currentAudio = new Audio(encodeURI(topic.audio));
+      currentAudioTopic = topic.id;
+      currentAudio.addEventListener("ended", () => {
+        currentAudio = null;
+        currentAudioTopic = null;
+        renderCards();
+      });
+      currentAudio.addEventListener("error", () => {
+        currentAudio = null;
+        currentAudioTopic = null;
+        renderCards();
+      });
+      currentAudio.play().catch(() => {
+        currentAudio = null;
+        currentAudioTopic = null;
+        renderCards();
+      });
+      renderCards();
+    }
+
     function updateScore() {
       $("#score").textContent = score;
-      $("#navScore").textContent = score;
       const answeredCount = questions.slice(0, qIndex).length + (answered ? 1 : 0);
       $("#progressBar").style.width = `${Math.min(100, (answeredCount / questions.length) * 100)}%`;
       $("#scoreNote").textContent = score === 0
@@ -1765,104 +3103,6 @@
       $("#progressBar").style.width = "100%";
     }
 
-    function setReaderStatus(message, state = "") {
-      const status = $("#readerStatus");
-      if (!status) return;
-      status.textContent = message;
-      status.classList.toggle("active", state === "active");
-      status.classList.toggle("stopped", state === "stopped");
-    }
-
-    function getSpanishVoice() {
-      const voices = window.speechSynthesis.getVoices();
-      return voices.find(voice => (voice.lang || "").toLowerCase().startsWith("es-cr"))
-        || voices.find(voice => (voice.lang || "").toLowerCase().startsWith("es-"))
-        || null;
-    }
-
-    function chunkText(text, maxLength = 165) {
-      const normalized = text.replace(/\s+/g, " ");
-      const sentences = normalized.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [normalized];
-      const chunks = [];
-      let current = "";
-      sentences.forEach(sentence => {
-        if ((current + " " + sentence).trim().length > maxLength && current) {
-          chunks.push(current.trim());
-          current = sentence;
-        } else {
-          current = `${current} ${sentence}`.trim();
-        }
-      });
-      if (current) chunks.push(current.trim());
-      return chunks;
-    }
-
-    function speakNextChunk() {
-      if (speechStopped || speechIndex >= speechChunks.length) {
-        $("#readTopicBtn")?.classList.remove("is-reading");
-        currentUtterance = null;
-        if (!speechStopped) setReaderStatus("Lectura finalizada.");
-        return;
-      }
-
-      const utterance = new SpeechSynthesisUtterance(speechChunks[speechIndex]);
-      currentUtterance = utterance;
-      const voice = getSpanishVoice();
-      if (voice) utterance.voice = voice;
-      utterance.lang = voice ? voice.lang : "es-ES";
-      utterance.rate = 0.88;
-      utterance.pitch = 0.96;
-      utterance.onend = () => {
-        speechIndex += 1;
-        speakNextChunk();
-      };
-      utterance.onerror = () => {
-        if (speechStopped) return;
-        $("#readTopicBtn")?.classList.remove("is-reading");
-        setReaderStatus("El navegador bloqueó la lectura. Toca nuevamente Leer esta ficha.", "stopped");
-      };
-      window.speechSynthesis.speak(utterance);
-      window.speechSynthesis.resume();
-    }
-
-    function speakCurrentTopic() {
-      if (!("speechSynthesis" in window)) {
-        setReaderStatus("Este navegador no tiene lectura en voz alta disponible.", "stopped");
-        return;
-      }
-      const readButton = $("#readTopicBtn");
-      const stopButton = $("#stopReadBtn");
-      readButton?.classList.add("is-reading");
-      stopButton?.classList.remove("is-stopping");
-      const topic = topics.find(item => item.id === activeTopic) || topics[0];
-      const text = [
-        topic.title,
-        topic.text,
-        ...(topic.detail || []),
-        ...topic.facts.map(([label, value]) => `${label}: ${value}`)
-      ].join(". ");
-      window.speechSynthesis.cancel();
-      speechStopped = false;
-      speechIndex = 0;
-      speechChunks = chunkText(text);
-      setReaderStatus("Lectura activa.", "active");
-      speakNextChunk();
-    }
-
-    function stopReading() {
-      speechStopped = true;
-      speechChunks = [];
-      if (currentUtterance) {
-        currentUtterance.onerror = null;
-        currentUtterance.onend = null;
-      }
-      currentUtterance = null;
-      if ("speechSynthesis" in window) window.speechSynthesis.cancel();
-      $("#readTopicBtn")?.classList.remove("is-reading");
-      $("#stopReadBtn")?.classList.add("is-stopping");
-      setReaderStatus("Lectura detenida.", "stopped");
-    }
-
     function applyTheme(theme) {
       document.documentElement.dataset.theme = theme;
       localStorage.setItem("puebla-theme", theme);
@@ -1877,6 +3117,24 @@
       const go = event.target.closest("[data-go]");
       if (go) setTab(go.dataset.go);
 
+      const playAudio = event.target.closest("[data-play-audio]");
+      if (playAudio) {
+        playTopicAudio(playAudio.dataset.playAudio);
+        return;
+      }
+
+      const stopAudio = event.target.closest("[data-stop-audio]");
+      if (stopAudio) {
+        stopTopicAudio(stopAudio.dataset.stopAudio);
+        return;
+      }
+
+      const cardAudio = event.target.closest("[data-card-audio]");
+      if (cardAudio) {
+        playTopicAudio(cardAudio.dataset.cardAudio);
+        return;
+      }
+
       const openTopic = event.target.closest("[data-open-topic]");
       if (openTopic) {
         openPanoramaReader(openTopic.dataset.openTopic);
@@ -1890,14 +3148,54 @@
       if (event.target.closest("[data-start-panorama-challenge]")) {
         startQuizFromBank(
           questionBank,
-          "Reto de comprensión",
-          "Responde cinco preguntas seleccionadas al azar del banco del documento. Cada acierto suma 10 puntos; el sistema muestra avance y resultado final."
+          "Reto de secciones del texto",
+          "Responde cinco preguntas seleccionadas al azar sobre la materia del texto. Cada acierto suma 10 puntos; el sistema muestra avance y resultado final."
         );
       }
 
-      if (event.target.closest("#readTopicBtn")) speakCurrentTopic();
+      if (event.target.closest("[data-open-matching]")) openMatchingGame();
 
-      if (event.target.closest("#stopReadBtn")) stopReading();
+      if (event.target.closest("[data-close-matching]")) closeMatchingGame();
+
+      if (event.target.closest("[data-check-matching]")) checkMatchingGame();
+
+      if (event.target.closest("[data-reset-matching]")) renderMatchingGame();
+
+      if (event.target.closest("[data-new-matching]")) renderNextMatchingGame();
+
+      if (event.target.closest("[data-open-word-search]")) openWordSearchGame();
+
+      if (event.target.closest("[data-close-word-search]")) closeWordSearchGame();
+
+      if (event.target.closest("[data-reset-word-search]")) resetWordSearch();
+
+      const wordCell = event.target.closest("[data-word-row]");
+      if (wordCell && !$("#wordSearchGame").hidden) {
+        toggleWordCell(wordCell);
+        return;
+      }
+
+      const pdfPage = event.target.closest("[data-pdf-page]");
+      if (pdfPage) {
+        setPdfPage(Number(pdfPage.dataset.pdfPage));
+      }
+
+      if (event.target.closest("[data-pdf-prev]")) setPdfPage(currentPdfPage - 1);
+
+      if (event.target.closest("[data-pdf-next]")) setPdfPage(currentPdfPage + 1);
+
+      const matchButton = event.target.closest("[data-match-value]");
+      if (matchButton) {
+        selectedMatchButton?.classList.remove("selected");
+        selectedMatchButton = matchButton;
+        selectedMatchButton.classList.add("selected");
+        $("#matchingStatus").textContent = "Ahora toca el concepto donde deseas colocar esa descripción.";
+      }
+
+      const matchTarget = event.target.closest("[data-match-target]");
+      if (matchTarget && selectedMatchButton && !event.target.closest("[data-match-value]")) {
+        placeMatchButton(selectedMatchButton, matchTarget);
+      }
 
       if (event.target.closest("#backToPanoramaBtn")) closePanoramaReader();
 
@@ -1918,6 +3216,41 @@
         }
         updateScore();
       }
+    });
+
+    document.addEventListener("dragstart", (event) => {
+      const button = event.target.closest("[data-match-value]");
+      if (!button) return;
+      event.dataTransfer.setData("text/plain", button.id);
+      event.dataTransfer.effectAllowed = "move";
+      button.classList.add("selected");
+    });
+
+    document.addEventListener("dragend", (event) => {
+      event.target.closest("[data-match-value]")?.classList.remove("selected");
+      $$(".match-target").forEach(target => target.classList.remove("drag-over"));
+    });
+
+    document.addEventListener("dragover", (event) => {
+      const target = event.target.closest("[data-match-target]");
+      if (!target) return;
+      event.preventDefault();
+      target.classList.add("drag-over");
+      event.dataTransfer.dropEffect = "move";
+    });
+
+    document.addEventListener("dragleave", (event) => {
+      const target = event.target.closest("[data-match-target]");
+      if (!target || target.contains(event.relatedTarget)) return;
+      target.classList.remove("drag-over");
+    });
+
+    document.addEventListener("drop", (event) => {
+      const target = event.target.closest("[data-match-target]");
+      if (!target) return;
+      event.preventDefault();
+      const button = document.getElementById(event.dataTransfer.getData("text/plain"));
+      placeMatchButton(button, target);
     });
 
     $("#themeBtn").addEventListener("click", () => {
@@ -1951,6 +3284,7 @@
     renderTopic();
     renderTimeline();
     renderTimelineTopic();
+    setPdfPage(1);
     resetQuiz();
   </script>
 </body>
