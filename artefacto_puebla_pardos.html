@@ -379,10 +379,33 @@
       border-color: rgba(184, 138, 56, .5);
     }
 
+    #themeBtn {
+      color: #2e3136;
+      background: linear-gradient(180deg, #f1f3f5, #dde2e7);
+      border-color: #c8d0d8;
+      box-shadow: 0 8px 18px rgba(46, 49, 54, .1), inset 0 1px 0 rgba(255, 255, 255, .74);
+    }
+
+    #themeBtn:hover {
+      background: linear-gradient(180deg, #f6f7f8, #d4dbe2);
+      border-color: #aeb8c3;
+    }
+
     [data-theme="dark"] .icon-btn {
       color: #f3eadc;
       background: rgba(243, 234, 220, .1);
       border-color: rgba(243, 234, 220, .3);
+    }
+
+    [data-theme="dark"] #themeBtn {
+      color: #25282d;
+      background: linear-gradient(180deg, #eceff2, #cfd6dd);
+      border-color: #bac4cd;
+    }
+
+    [data-theme="dark"] #themeBtn:hover {
+      background: linear-gradient(180deg, #f4f6f7, #d8dee4);
+      border-color: #c8d0d8;
     }
 
     [data-theme="dark"] .tab {
@@ -710,10 +733,10 @@
 
     .word-grid {
       display: grid;
-      grid-template-columns: repeat(14, minmax(0, 1fr));
+      grid-template-columns: repeat(9, minmax(0, 1fr));
       gap: 3px;
-      width: min(100%, 540px);
-      max-width: 540px;
+      width: min(100%, 420px);
+      max-width: 420px;
       user-select: none;
       touch-action: none;
     }
@@ -1846,7 +1869,7 @@
             <ul class="word-list" id="wordList"></ul>
           </div>
         </div>
-        <p class="reader-status" id="wordSearchStatus" aria-live="polite">Encuentra las cinco palabras.</p>
+        <p class="reader-status" id="wordSearchStatus" aria-live="polite">Encuentra todas las palabras.</p>
       </div>
 
       <div class="panorama-reader" id="panoramaReader" hidden>
@@ -2266,21 +2289,27 @@
       ]
     ];
 
-    const wordSearchSize = 14;
+    const wordSearchSize = 9;
     const wordSearchSets = [
       [
-        { label: "LA GOTERA", key: "LAGOTERA", row: 3, col: 1, dr: 1, dc: 0 },
-        { label: "PARDO", key: "PARDO", row: 13, col: 1, dr: 0, dc: 1 },
-        { label: "LA PUEBLA", key: "LAPUEBLA", row: 0, col: 5, dr: 0, dc: 1 },
-        { label: "CRUZ DE CARAVACA", key: "CRUZDECARAVACA", row: 0, col: 0, dr: 1, dc: 1 },
-        { label: "MILICIAS", key: "MILICIAS", row: 4, col: 13, dr: 1, dc: 0 }
+        { label: "GOTERA", key: "GOTERA", row: 6, col: 1, dr: -1, dc: 0 },
+        { label: "PUEBLA", key: "PUEBLA", row: 2, col: 7, dr: 1, dc: 0 },
+        { label: "NEGROS", key: "NEGROS", row: 3, col: 8, dr: 1, dc: -1 },
+        { label: "LIBRES", key: "LIBRES", row: 5, col: 2, dr: -1, dc: 1 },
+        { label: "MULATOS", key: "MULATOS", row: 0, col: 6, dr: 1, dc: -1 },
+        { label: "PARDOS", key: "PARDOS", row: 7, col: 8, dr: 0, dc: -1 },
+        { label: "VIRGEN", key: "VIRGEN", row: 0, col: 3, dr: 1, dc: 1 },
+        { label: "CRUZ", key: "CRUZ", row: 3, col: 5, dr: -1, dc: 0 },
+        { label: "CARAVACA", key: "CARAVACA", row: 0, col: 0, dr: 1, dc: 1 }
       ],
       [
-        { label: "OFICIO", key: "OFICIO", row: 2, col: 1, dr: 0, dc: 1 },
-        { label: "MESTIZO", key: "MESTIZO", row: 0, col: 11, dr: 1, dc: 0 },
-        { label: "COFRADIA", key: "COFRADIA", row: 5, col: 0, dr: 1, dc: 1 },
-        { label: "MULATO", key: "MULATO", row: 12, col: 1, dr: 0, dc: 1 },
-        { label: "SASTRE", key: "SASTRE", row: 4, col: 13, dr: 1, dc: 0 }
+        { label: "ASIENTO", key: "ASIENTO", row: 3, col: 7, dr: 0, dc: -1 },
+        { label: "CABILDO", key: "CABILDO", row: 2, col: 8, dr: 1, dc: -1 },
+        { label: "MILICIAS", key: "MILICIAS", row: 0, col: 5, dr: 1, dc: 0 },
+        { label: "OFICIO", key: "OFICIO", row: 8, col: 7, dr: 0, dc: -1 },
+        { label: "SASTRE", key: "SASTRE", row: 6, col: 2, dr: -1, dc: 0 },
+        { label: "COFRADIA", key: "COFRADIA", row: 7, col: 7, dr: -1, dc: 0 },
+        { label: "DERECHOS", key: "DERECHOS", row: 0, col: 1, dr: 1, dc: 1 }
       ]
     ];
     const wordSearchFill = "BCEFHIJKNQSTUVXYZ";
@@ -2816,13 +2845,19 @@
       ));
     }
 
-    function renderWordSearch() {
+    function getFoundWordCells() {
       const wordSearchWords = wordSearchSets[activeWordSearchSet];
       const foundCells = new Set();
       wordSearchWords.forEach(word => {
         if (!foundWordKeys.has(word.key)) return;
         getWordPath(word).forEach(key => foundCells.add(key));
       });
+      return foundCells;
+    }
+
+    function renderWordSearch() {
+      const wordSearchWords = wordSearchSets[activeWordSearchSet];
+      const foundCells = getFoundWordCells();
       $("#wordGrid").innerHTML = wordSearchGrid.map((rowItems, row) => rowItems.map((letter, col) => {
         const key = wordCellKey(row, col);
         const state = foundCells.has(key) ? "found" : selectedWordCells.has(key) ? "selecting" : "";
@@ -2883,8 +2918,11 @@
 
     function checkSelectedWord() {
       const wordSearchWords = wordSearchSets[activeWordSearchSet];
+      const foundCells = getFoundWordCells();
       const word = wordSearchWords.find(item => (
-        !foundWordKeys.has(item.key) && getWordPath(item).every(key => selectedWordCells.has(key))
+        !foundWordKeys.has(item.key) && getWordPath(item).every(key => (
+          selectedWordCells.has(key) || foundCells.has(key)
+        ))
       ));
       if (!word) return;
       foundWordKeys.add(word.key);
