@@ -1834,6 +1834,7 @@
             <p>Selecciona las letras con el mouse hasta formar cada palabra.</p>
           </div>
           <div class="reader-actions">
+            <button class="btn secondary" type="button" data-next-word-search>Otra sopa</button>
             <button class="btn secondary" type="button" data-reset-word-search>Reiniciar sopa</button>
             <button class="btn secondary" type="button" data-close-word-search>Cerrar</button>
           </div>
@@ -1966,25 +1967,25 @@
       {
         id: "milicias-1",
         tag: "Hoja 4",
-        title: "Milicias I",
+        title: "Milicias parte 1",
         audio: "Audios del texto_La_Puebla_de_los_Pardos_en_el_siglo_XVII/hoja4_Las milicias de negros, mulatos y pardos.mp3"
       },
       {
         id: "milicias-2",
         tag: "Hoja 5",
-        title: "Milicias II",
+        title: "Milicias parte 2",
         audio: "Audios del texto_La_Puebla_de_los_Pardos_en_el_siglo_XVII/hoja5_Las milicias de negros, mulatos y pardos.mp3"
       },
       {
         id: "milicias-3",
         tag: "Hoja 6",
-        title: "Milicias III",
+        title: "Milicias parte 3",
         audio: "Audios del texto_La_Puebla_de_los_Pardos_en_el_siglo_XVII/hoja6_Las milicias de negros, mulatos y pardos.mp3"
       },
       {
         id: "milicias-4",
         tag: "Hoja 7",
-        title: "Milicias IV",
+        title: "Milicias parte 4",
         audio: "Audios del texto_La_Puebla_de_los_Pardos_en_el_siglo_XVII/hoja7_Las milicias de negros, mulatos y pardos.mp3"
       },
       {
@@ -2266,14 +2267,24 @@
     ];
 
     const wordSearchSize = 14;
-    const wordSearchWords = [
-      { label: "LA GOTERA", key: "LAGOTERA", row: 3, col: 1, dr: 1, dc: 0 },
-      { label: "PARDO", key: "PARDO", row: 13, col: 1, dr: 0, dc: 1 },
-      { label: "LA PUEBLA", key: "LAPUEBLA", row: 0, col: 5, dr: 0, dc: 1 },
-      { label: "CRUZ DE CARAVACA", key: "CRUZDECARAVACA", row: 0, col: 0, dr: 1, dc: 1 },
-      { label: "MILICIAS", key: "MILICIAS", row: 4, col: 13, dr: 1, dc: 0 }
+    const wordSearchSets = [
+      [
+        { label: "LA GOTERA", key: "LAGOTERA", row: 3, col: 1, dr: 1, dc: 0 },
+        { label: "PARDO", key: "PARDO", row: 13, col: 1, dr: 0, dc: 1 },
+        { label: "LA PUEBLA", key: "LAPUEBLA", row: 0, col: 5, dr: 0, dc: 1 },
+        { label: "CRUZ DE CARAVACA", key: "CRUZDECARAVACA", row: 0, col: 0, dr: 1, dc: 1 },
+        { label: "MILICIAS", key: "MILICIAS", row: 4, col: 13, dr: 1, dc: 0 }
+      ],
+      [
+        { label: "OFICIO", key: "OFICIO", row: 2, col: 1, dr: 0, dc: 1 },
+        { label: "MESTIZO", key: "MESTIZO", row: 0, col: 11, dr: 1, dc: 0 },
+        { label: "COFRADIA", key: "COFRADIA", row: 5, col: 0, dr: 1, dc: 1 },
+        { label: "MULATO", key: "MULATO", row: 12, col: 1, dr: 0, dc: 1 },
+        { label: "SASTRE", key: "SASTRE", row: 4, col: 13, dr: 1, dc: 0 }
+      ]
     ];
     const wordSearchFill = "BCEFHIJKNQSTUVXYZ";
+    let activeWordSearchSet = 0;
     let wordSearchGrid = [];
     let foundWordKeys = new Set();
     let selectedWordCells = new Set();
@@ -2776,6 +2787,7 @@
     }
 
     function buildWordSearchGrid() {
+      const wordSearchWords = wordSearchSets[activeWordSearchSet];
       const grid = Array.from({ length: wordSearchSize }, () => Array(wordSearchSize).fill(""));
       let fillIndex = 0;
       wordSearchWords.forEach(word => {
@@ -2805,6 +2817,7 @@
     }
 
     function renderWordSearch() {
+      const wordSearchWords = wordSearchSets[activeWordSearchSet];
       const foundCells = new Set();
       wordSearchWords.forEach(word => {
         if (!foundWordKeys.has(word.key)) return;
@@ -2820,8 +2833,8 @@
       )).join("");
       const remaining = wordSearchWords.length - foundWordKeys.size;
       $("#wordSearchStatus").textContent = remaining === 0
-        ? "Sopa completa. Todas las palabras fueron encontradas."
-        : `Faltan ${remaining} palabra${remaining === 1 ? "" : "s"} por encontrar.`;
+        ? `Sopa ${activeWordSearchSet + 1} completa. Todas las palabras fueron encontradas.`
+        : `Sopa ${activeWordSearchSet + 1} de ${wordSearchSets.length}. Faltan ${remaining} palabra${remaining === 1 ? "" : "s"} por encontrar.`;
       $("#wordSearchStatus").classList.toggle("active", remaining === 0);
       $("#wordSearchStatus").classList.remove("stopped");
     }
@@ -2831,6 +2844,11 @@
       foundWordKeys = new Set();
       selectedWordCells = new Set();
       renderWordSearch();
+    }
+
+    function renderNextWordSearch() {
+      activeWordSearchSet = (activeWordSearchSet + 1) % wordSearchSets.length;
+      resetWordSearch();
     }
 
     function openWordSearchGame() {
@@ -2864,6 +2882,7 @@
     }
 
     function checkSelectedWord() {
+      const wordSearchWords = wordSearchSets[activeWordSearchSet];
       const word = wordSearchWords.find(item => (
         !foundWordKeys.has(item.key) && getWordPath(item).every(key => selectedWordCells.has(key))
       ));
@@ -3187,6 +3206,8 @@
       if (event.target.closest("[data-close-word-search]")) closeWordSearchGame();
 
       if (event.target.closest("[data-reset-word-search]")) resetWordSearch();
+
+      if (event.target.closest("[data-next-word-search]")) renderNextWordSearch();
 
       const wordCell = event.target.closest("[data-word-row]");
       if (wordCell && !$("#wordSearchGame").hidden) {
