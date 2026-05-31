@@ -1346,7 +1346,8 @@
     .pdf-frame-wrap {
       border: 1px solid var(--line);
       border-radius: 8px;
-      overflow: hidden;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
       background: var(--paper);
       box-shadow: var(--shadow);
     }
@@ -1354,6 +1355,8 @@
     .pdf-page-image {
       display: block;
       width: 100%;
+      height: auto;
+      max-width: none;
       border: 0;
       background: var(--paper);
     }
@@ -1581,6 +1584,14 @@
         position: static;
       }
 
+      .pdf-frame-wrap {
+        max-height: 78vh;
+      }
+
+      .pdf-page-image {
+        width: 760px;
+      }
+
     }
 
     @media (max-width: 1120px) and (min-width: 861px) {
@@ -1643,6 +1654,14 @@
       .word-list li {
         padding: 7px 8px;
         font-size: 12px;
+      }
+
+      .pdf-frame-wrap {
+        max-height: 72vh;
+      }
+
+      .pdf-page-image {
+        width: 680px;
       }
 
       header {
